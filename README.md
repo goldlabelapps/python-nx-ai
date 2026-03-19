@@ -1,13 +1,14 @@
 # NX AI
 
+> Production ready Python FastAPI/Postgres app for [NX](https://goldlabel.pro?s=nx-ai) AI services and more
+
 ```sh
 uvicorn app.main:app
+pytest
 ```
+
 [localhost](http://localhost:8000)  
 [Public RESTful API](https://nx-ai.onrender.com) 
-
-
-Production-ready Python FastAPI app for [NX](https://goldlabel.pro?s=nx-ai) AI services and more
 
 - **Python 3.11+**
 - **FastAPI** — RESTful API framework
@@ -70,8 +71,4 @@ curl -X POST http://localhost:8000/echo \
 # {"echo":"hello"}
 ```
 
-## Running Tests
 
-```bash
-pytest
-```
