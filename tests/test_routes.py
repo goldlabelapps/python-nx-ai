@@ -11,7 +11,11 @@ def test_root_returns_welcome_message() -> None:
     """GET / should return a welcome message."""
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"message": "Welcome to NX AI!"}
+    json_data = response.json()
+    assert "meta" in json_data
+    assert "data" in json_data
+    assert "message" in json_data["meta"]
+    assert "NX AI" in json_data["meta"]["message"]
 
 
 def test_health_returns_ok() -> None:
