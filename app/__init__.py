@@ -1,1 +1,4 @@
-"""NX AI - FastAPI portfolio application package."""
+"""NX AI - FastAPI"""
+
+# Version tracking
+__version__ = "1.0.0"
