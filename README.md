@@ -1,22 +1,38 @@
 # NX AI
 
-> Production ready Python FastAPI/Postgres app for [NX](https://goldlabel.pro?s=nx-ai) AI services and more
+> FastAPI/Python/Postgres/tsvector. Production ready Python FastAPI/Postgres app for [NX](https://goldlabel.pro?s=nx-ai) AI services and more
+
+## Install & use
+
+```bash
+# Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the development server
+uvicorn app.main:app --reload
+```
 
 ```sh
 uvicorn app.main:app
 pytest
 ```
 
-[localhost](http://localhost:8000)  
-[Public RESTful API](https://nx-ai.onrender.com) 
+The API is at <http://localhost:8000>.
+
+[localhost](http://localhost:8000) | [Public RESTful API](https://nx-ai.onrender.com) 
 
 - **Python 3.11+**
+- **Postgres**
+- **tsvector** - Superfast search
 - **FastAPI** — RESTful API framework
 - **Uvicorn** — ASGI server
 - **Pytest** — testing framework
-- **HTTPX / TestClient** — HTTP testing
+- **HTTPX / TestClient**
 
-## Docs
 
 FastAPI automatically generates interactive documentation:
 
@@ -38,21 +54,6 @@ tests/
 requirements.txt
 ```
 
-## Install
-
-```bash
-# Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Start the development server
-uvicorn app.main:app --reload
-```
-
-The API will be available at <http://localhost:8000>.
 
 ## Endpoints
 
@@ -61,14 +62,5 @@ The API will be available at <http://localhost:8000>.
 | GET    | `/`       | Welcome message                 |
 | GET    | `/health` | Health check — returns `ok`     |
 | POST   | `/echo`   | Echoes the JSON `message` field |
-
-### Example — Echo
-
-```bash
-curl -X POST http://localhost:8000/echo \
-     -H "Content-Type: application/json" \
-     -d '{"message": "hello"}'
-# {"echo":"hello"}
-```
 
 

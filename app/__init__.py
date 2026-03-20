@@ -1,4 +1,4 @@
-"""NX AI - FastAPI"""
+"""NX AI - FastAPI/Python/Postgres/tsvector"""
 
-# Version tracking
-__version__ = "1.0.3"
+# Current Version
+__version__ = "1.0.4"

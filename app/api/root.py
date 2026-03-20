@@ -39,6 +39,6 @@ def root() -> dict:
         "time": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
         "epoch": epoch,
         "severity": "success",
-        "message": f"NX AI says hello. Returned {len(products)} products."
+        "message": f"NX AI says hello & returned {len(products)} products"
     }
     return {"meta": meta, "data": products}
