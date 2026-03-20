@@ -1,8 +1,17 @@
-# NX AI
+## Python NX AI
 
-> FastAPI/Python/Postgres/tsvector. Production ready Python FastAPI/Postgres app for [NX](https://goldlabel.pro?s=nx-ai) AI services and more
+> FastAPI/Python/Postgres/tsvector. 
+Open Source, production ready Python FastAPI/Postgres app for [NX](https://goldlabel.pro?s=python-nx-ai)
 
-## Install & use
+#### Use
+
+`uvicorn app.main:app`
+
+#### Install
+
+Create an environment file and add Postgres credentials etc
+
+`cp .env.sample .env`
 
 ```bash
 # Create and activate a virtual environment
@@ -12,13 +21,8 @@ source venv/bin/activate   # Windows: venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Start the development server
+# Start development server
 uvicorn app.main:app --reload
-```
-
-```sh
-uvicorn app.main:app
-pytest
 ```
 
 The API is at <http://localhost:8000>.
@@ -33,13 +37,12 @@ The API is at <http://localhost:8000>.
 - **Pytest** — testing framework
 - **HTTPX / TestClient**
 
-
 FastAPI automatically generates interactive documentation:
 
 - Swagger UI: <http://localhost:8000/docs>
 - ReDoc: <http://localhost:8000/redoc>
 
-## Structure
+#### Structure
 
 ```
 app/
@@ -55,7 +58,7 @@ requirements.txt
 ```
 
 
-## Endpoints
+#### Endpoints
 
 | Method | Path      | Description                     |
 |--------|-----------|---------------------------------|
