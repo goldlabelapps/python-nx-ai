@@ -3,6 +3,7 @@ from app import __version__
 
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import os
@@ -16,6 +17,18 @@ app = FastAPI(
     version=__version__,
 )
 
+# CORS middleware for development
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:1999", 
+        "https://goldlabel.pro",
+        "https://soho.goldlabel.pro",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 app.include_router(router)
 

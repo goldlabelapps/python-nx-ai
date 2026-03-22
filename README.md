@@ -14,14 +14,9 @@ Create an environment file and add Postgres credentials etc
 `cp .env.sample .env`
 
 ```bash
-# Create and activate a virtual environment
 python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
-
-# Install dependencies
+source venv/bin/activate
 pip install -r requirements.txt
-
-# Start development server
 uvicorn app.main:app --reload
 ```
 

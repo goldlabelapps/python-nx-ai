@@ -19,6 +19,7 @@ def root() -> dict:
         "base_url": base_url,
         "time": epoch,
         "severity": "success",
+        "message": "Welcome to NX AI!"
     }
     endpoints = [
         {"docs": "docs", "url": f"{base_url}/docs"},
