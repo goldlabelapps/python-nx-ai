@@ -1,4 +1,4 @@
-"""Unit and integration tests for NX AI routes."""
+"""Unit and integration tests for I endpoints."""
 
 from unittest.mock import MagicMock
 from fastapi.testclient import TestClient
@@ -8,7 +8,7 @@ from app.main import app
 client = TestClient(app)
 
 def test_root_returns_welcome_message() -> None:
-    """GET / should return a welcome message."""
+    """GET / should reply in the first person."""
     response = client.get("/")
     assert response.status_code == 200
     json_data = response.json()
