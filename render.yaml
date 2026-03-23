@@ -1,7 +1,7 @@
 # Exported from Render on 2026-03-18T18:57:52Z
 version: "1"
 projects:
-- name: NX AI Python
+- name: I
   environments:
   - name: Production
     services:

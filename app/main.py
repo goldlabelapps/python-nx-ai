@@ -4,13 +4,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import os
-
-from app import __version__
 from app.api.routes import router
 
 app = FastAPI(
-    title="NX-AI",
-    description="Production-ready Python FastAPI app for NX",
+    title="I",
+    description="Production-ready Python with FastAPI and tsvector",
     version=__version__,
 )
 
