@@ -1,6 +1,5 @@
 from app import __version__
-"""NX AI - FastAPI entry point."""
-
+"""NX-AI Open Source, production ready Python FastAPI/Postgres app for NX"""
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,7 +11,7 @@ from app import __version__
 from app.api.routes import router
 
 app = FastAPI(
-    title="NX AI",
+    title="NX-AI",
     description="Production-ready Python FastAPI app for NX",
     version=__version__,
 )

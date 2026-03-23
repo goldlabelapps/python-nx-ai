@@ -1,5 +1,6 @@
 from app import __version__
 from fastapi import APIRouter
+from fastapi import status
 import os, time
 import psycopg2
 from dotenv import load_dotenv
@@ -39,11 +40,10 @@ def root() -> dict:
 
     epoch = int(time.time() * 1000)
     meta = {
+        "severity": "success",
         "title": "Product List",
-        "description": "from the products Postgres table",
         "version": __version__,
         "base_url": base_url,
         "time": epoch,
-        "severity": "success",
     }
     return {"meta": meta, "data": products}
