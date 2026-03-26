@@ -2,85 +2,55 @@ from app import __version__
 import os, time
 import csv
 from fastapi import APIRouter, status
-from app.api.db import get_db_connection
+from app.utils.db import get_db_connection
 
 router = APIRouter()
 
 CSV_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data/seed.csv'))
 
-@router.get("/products/seed", status_code=status.HTTP_200_OK)
-def seed_products() -> dict:
-    """Delete and recreate the product table, then seed with CSV data."""
+def normalize_column(col):
+    import re
+    col = col.strip().lower().replace(' ', '_')
+    col = re.sub(r'[^a-z0-9_]', '', col)
+    if col and col[0].isdigit():
+        col = '_' + col
+    return col
+
+@router.get("/prospects/seed", status_code=status.HTTP_200_OK)
+def seed_prospects() -> dict:
+    """Delete and recreate the prospects table, then seed with CSV data."""
     conn_gen = get_db_connection()
     conn = next(conn_gen)
     cur = conn.cursor()
-    # Drop and recreate table with all CSV columns
-    cur.execute('''
-        DROP TABLE IF EXISTS product;
-        CREATE TABLE product (
-            id SERIAL PRIMARY KEY,
-            Params TEXT,
-            item INTEGER,
-            title TEXT,
-            UOS TEXT,
-            Pack_Description TEXT,
-            Hierarchy1 TEXT,
-            Hierarchy2 TEXT,
-            Hierarchy3 TEXT,
-            UOP TEXT,
-            sSell1 NUMERIC(10,2),
-            sSell2 NUMERIC(10,2),
-            sSell3 NUMERIC(10,2),
-            sSell4 NUMERIC(10,2),
-            sSell5 NUMERIC(10,2),
-            pack1 INTEGER,
-            pack2 INTEGER,
-            pack3 INTEGER,
-            pack4 INTEGER,
-            pack5 INTEGER,
-            EAN TEXT
-        );
-    ''')
-    # Read and insert CSV data
-    with open(CSV_PATH, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        rows = [row for row in reader]
-        for row in rows:
-            # Map 'desc' from CSV to 'title' for DB
-            row['title'] = row.pop('desc')
-            cur.execute(
-                """
-                INSERT INTO product (
-                    Params, item, title, UOS, Pack_Description, Hierarchy1, Hierarchy2, Hierarchy3, UOP,
-                    sSell1, sSell2, sSell3, sSell4, sSell5, pack1, pack2, pack3, pack4, pack5, EAN
-                ) VALUES (
-                    %(Params)s, %(item)s, %(title)s, %(UOS)s, %(Pack_Description)s, %(Hierarchy1)s, %(Hierarchy2)s, %(Hierarchy3)s, %(UOP)s,
-                    %(sSell1)s, %(sSell2)s, %(sSell3)s, %(sSell4)s, %(sSell5)s, %(pack1)s, %(pack2)s, %(pack3)s, %(pack4)s, %(pack5)s, %(EAN)s
-                )
-                """,
-                row
-            )
-    # Add tsvector column for full-text search
-    cur.execute('''
-        ALTER TABLE product
-        ADD COLUMN IF NOT EXISTS search_vector tsvector;
-    ''')
-    # Populate tsvector column (example: combine title, Pack_Description, Hierarchy1-3)
-    cur.execute('''
-        UPDATE product SET search_vector =
-            to_tsvector('english', coalesce(title,'') || ' ' || coalesce(Pack_Description,'') || ' ' || coalesce(Hierarchy1,'') || ' ' || coalesce(Hierarchy2,'') || ' ' || coalesce(Hierarchy3,''));
-    ''')
-    # Create GIN index for fast search
-    cur.execute('''
-        CREATE INDEX IF NOT EXISTS idx_product_search_vector ON product USING GIN(search_vector);
-    ''')
+
+    # Provided CSV data
+    csv_data = '''First Name,Last Name,Title,Company Name,Email,Email Status,Primary Email Source,Primary Email Verification Source,Email Confidence,Primary Email Catch-all Status,Primary Email Last Verified At,Seniority,Sub Departments,Work Direct Phone,Home Phone,Mobile Phone,Corporate Phone,Other Phone,Do Not Call,Lists,Person Linkedin Url,Country,Subsidiary of,Subsidiary of (Organization ID),Secondary Email,Secondary Email Source,Secondary Email Status,Secondary Email Verification Source,Tertiary Email,Tertiary Email Source,Tertiary Email Status,Tertiary Email Verification Source,Primary Intent Topic,Primary Intent Score,Secondary Intent Topic,Secondary Intent Score,Qualify Contact,Cleaned\nLaurence,Brophy,Finance Director,Abraham Moon & Sons,laurence.brophy@moons.co.uk,Verified,Apollo,Apollo,,,2026-03-18T22:36:33+00:00,Director,Finance,,,,'+44 194 387 3181,,FALSE,Magento 2,http://www.linkedin.com/in/laurence-brophy-248752145,United Kingdom,,,,,,,,,,,,,,,,\nJulie,Lavington,CEO and Founder,Sosandar,julie.lavington@sosandar.com,Verified,Apollo,Apollo,,,2026-03-11T10:33:18+00:00,Founder,"Executive, Founder",,,,'+44 333 305 2866,,FALSE,Magento 2,http://www.linkedin.com/in/julie-lavington-1181744,United Kingdom,,,,,,,,,,,,,,,,\nAndrew,Shand,Chief Executive Officer,Ruroc,andrew.shand@ruroc.com,Verified,Apollo,Apollo,,,2026-03-16T21:14:58+00:00,C suite,Executive,,,,,,FALSE,Magento 2,http://www.linkedin.com/in/andrew-shand-74068513,United Kingdom,,,,,,,,,,,,,,,,\nNick,Anstee,Head of Server Support / Programmer,Stock in the Channel,nick.anstee@stockinthechannel.com,Verified,Apollo,Apollo,,Not Catch-all,2026-03-24T09:59:02+00:00,Head,"Software Development, Support / Technical Services, Application Development, Servers",,,,'+44 845 225 2125,,FALSE,Magento 2,http://www.linkedin.com/in/nick-anstee-4b102277,United Kingdom,,,,,,,,,,,,,,,,'''
+
+    import io
+    reader = csv.reader(io.StringIO(csv_data))
+    columns_raw = next(reader)
+    columns = [normalize_column(col) for col in columns_raw]
+
+    # Drop and recreate table
+    cur.execute('DROP TABLE IF EXISTS prospects;')
+    create_cols = ',\n    '.join([f'{col} TEXT' for col in columns])
+    cur.execute(f'''CREATE TABLE prospects (\n    id SERIAL PRIMARY KEY,\n    {create_cols}\n);''')
+
+    # Insert rows
+    for row in reader:
+        placeholders = ', '.join(['%s'] * len(columns))
+        cur.execute(
+            f"INSERT INTO prospects ({', '.join(columns)}) VALUES ({placeholders})",
+            row
+        )
+
     conn.commit()
-    cur.execute('SELECT * FROM product;')
+    cur.execute('SELECT * FROM prospects;')
     if cur.description is None:
-        products = []
+        prospects = []
     else:
-        columns = [desc[0] for desc in cur.description]
-        products = [dict(zip(columns, row)) for row in cur.fetchall()]
+        colnames = [desc[0] for desc in cur.description]
+        prospects = [dict(zip(colnames, row)) for row in cur.fetchall()]
     cur.close()
     conn.close()
 
@@ -88,9 +58,9 @@ def seed_products() -> dict:
     epoch = int(time.time() * 1000)
     meta = {
         "severity": "success",
-        "title": "Product table seeded",
+        "title": "Prospects table seeded",
         "version": __version__,
         "base_url": base_url,
         "time": epoch,
     }
-    return {"meta": meta, "data": products}
+    return {"meta": meta, "data": prospects}
