@@ -5,13 +5,14 @@ from fastapi import APIRouter
 from app.utils.db import get_db_connection
 
 router = APIRouter()
-
+    
+base_url = os.getenv("BASE_URL", "http://localhost:8000")
 
 @router.get("/prospects")
 def root() -> dict:
     """Return a placeholder message for prospects endpoint."""
     meta = make_meta("success", "Prospects placeholder")
-    data = {"message": "This is a placeholder for the /prospects endpoint."}
+    data = {"init": f"{base_url}/prospects/init"}
     return {"meta": meta, "data": data}
 
 
@@ -38,8 +39,14 @@ def prospects_init() -> dict:
         # Get unique titles and their counts (column is 'title')
         cur.execute('SELECT title, COUNT(*) FROM prospects WHERE title IS NOT NULL GROUP BY title ORDER BY COUNT(*) DESC;')
         title_rows = cur.fetchall()
+        def slugify(text):
+            import re
+            text = str(text).lower()
+            text = re.sub(r'[^a-z0-9]+', '-', text)
+            return text.strip('-')
+
         title = [
-            {"label": t[0], "count": t[1]} for t in title_rows if t[0] is not None
+            {"label": f"{t[0]} ({t[1]})", "value": slugify(t[0])} for t in title_rows if t[0] is not None
         ]
         total_unique_title = len(title)
 
@@ -47,7 +54,7 @@ def prospects_init() -> dict:
         cur.execute('SELECT seniority, COUNT(*) FROM prospects WHERE seniority IS NOT NULL GROUP BY seniority ORDER BY COUNT(*) DESC;')
         seniority_rows = cur.fetchall()
         seniority = [
-            {"label": s[0], "count": s[1]} for s in seniority_rows if s[0] is not None
+            {"label": f"{s[0]} ({s[1]})", "value": slugify(s[0])} for s in seniority_rows if s[0] is not None
         ]
         total_unique_seniority = len(seniority)
 
@@ -55,7 +62,7 @@ def prospects_init() -> dict:
         cur.execute('SELECT sub_departments, COUNT(*) FROM prospects WHERE sub_departments IS NOT NULL GROUP BY sub_departments ORDER BY COUNT(*) DESC;')
         sub_department_rows = cur.fetchall()
         sub_departments = [
-            {"label": sd[0], "count": sd[1]} for sd in sub_department_rows if sd[0] is not None
+            {"label": f"{sd[0]} ({sd[1]})", "value": slugify(sd[0])} for sd in sub_department_rows if sd[0] is not None
         ]
         total_unique_sub_departments = len(sub_departments)
     except Exception:
@@ -73,15 +80,15 @@ def prospects_init() -> dict:
         "total_prospects": total,
         "title": {
             "total_unique": total_unique_title,
-            "values": title
+            "values": title[:3]
         },
         "seniority": {
             "total_unique": total_unique_seniority,
-            "values": seniority
+            "values": seniority[:3]
         },
         "departments": {
             "total_unique": total_unique_sub_departments,
-            "values": sub_departments
+            "values": sub_departments[:3]
         }
     }
     return {"meta": meta, "data": data}
