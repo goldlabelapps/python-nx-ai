@@ -18,7 +18,7 @@ def normalize_column(col):
         col = '_' + col
     return col
 
-@router.get("/prospects/process", status_code=status.HTTP_200_OK)
+@router.put("/prospects/process", status_code=status.HTTP_200_OK)
 def process_prospects() -> dict:
     """
     Process and insert data from the large CSV file (big.csv) into the prospects table.

@@ -1,6 +1,7 @@
 ## I_Python
 
 > Python with FastAPI using Postgres & tsvector. 
+
 Open Source, production ready Python FastAPI/Postgres app for [NX](https://goldlabel.pro?s=python-nx-ai)
 
 ```sh

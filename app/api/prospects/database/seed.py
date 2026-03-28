@@ -16,7 +16,7 @@ def normalize_column(col):
         col = '_' + col
     return col
 
-@router.get("/prospects/seed", status_code=status.HTTP_200_OK)
+@router.put("/prospects/seed", status_code=status.HTTP_200_OK)
 def seed_prospects() -> dict:
     """Delete and recreate the prospects table, then seed with CSV data."""
     conn_gen = get_db_connection()

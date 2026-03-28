@@ -16,7 +16,7 @@ def root() -> dict:
         "title": "How can I help?",
         "severity": "success",
         "version": __version__,
-        "base_url": base_url,
+        "endpoint": base_url,
         "time": epoch,
     }
     endpoints = [

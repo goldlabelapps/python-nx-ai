@@ -3,7 +3,7 @@ from app.utils.db import get_db_connection
 
 router = APIRouter()
 
-@router.get("/prospects/alter", status_code=status.HTTP_200_OK)
+@router.patch("/prospects/alter", status_code=status.HTTP_200_OK)
 def alter_prospects_table() -> dict:
     """
     Checks if the 'prospects' table exists, then checks if the 'secondary_email' column exists.
