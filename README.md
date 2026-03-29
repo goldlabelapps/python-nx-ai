@@ -1,3 +1,7 @@
+# ![NextJS](/app/static/repoicon.png) <NEW> I_Python
+
+> Python with FastAPI using Postgres & tsvector. Open Source, production ready Python FastAPI/Postgres app. [GitHub](https://github.com/goldlabelapps/python-nx-ai) | [NX-AI onrender](https://nx-ai.onrender.com)
+
 ## I_Python
 
 > Python with FastAPI using Postgres & tsvector. 

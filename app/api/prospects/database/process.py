@@ -4,7 +4,7 @@ from app.utils.db import get_db_connection
 
 router = APIRouter()
 
-CSV_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data/big.csv'))
+CSV_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'big.csv'))
 
 
 import csv
