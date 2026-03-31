@@ -18,8 +18,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:1999", 
         "https://goldlabel.pro",
-        "https://soho.goldlabel.pro",
-        "https://echopay.goldlabel.pro",
+        "https://free.goldlabel.pro",
     ],
     allow_credentials=True,
     allow_methods=["*"],
