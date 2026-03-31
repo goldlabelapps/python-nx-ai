@@ -11,10 +11,10 @@ base_url = os.getenv("BASE_URL", "http://localhost:8000")
 @router.get("/prospects")
 def root() -> dict:
     """GET /prospects endpoint."""
-    meta = make_meta("success", "Prospects start")
+    meta = make_meta("success", "Prospects endpoint")
     data = [
         {"init": f"{base_url}/prospects/init"},
-        {"search": f"{base_url}/prospects/search/?query=example"},
+        {"search": f"{base_url}/prospects/search/?query=karen"},
     ]
     return {"meta": meta, "data": data}
 
@@ -189,6 +189,7 @@ def prospects_init() -> dict:
                 "list": sub_departments
             }
         },
+        "message": "This is a placeholder for prospects/init."
     }
     return {"meta": meta, "data": data}
 

@@ -13,13 +13,13 @@ def test_make_meta_basic(monkeypatch):
     assert meta["severity"] == "info"
     assert meta["title"] == "Test Title"
     assert meta["version"] == __version__
-    assert meta["base_url"] == "http://testserver:9000"
+    assert meta["base"] == "http://testserver:9000"
     assert before <= meta["time"] <= after
 
 def test_make_meta_default_base_url(monkeypatch):
     monkeypatch.delenv("BASE_URL", raising=False)
     meta = make_meta("success", "Default URL")
-    assert meta["base_url"] == "http://localhost:8000"
+    assert meta["base"] == "http://localhost:8000"
 
 def test_make_meta_time_is_int():
     meta = make_meta("info", "Time Test")

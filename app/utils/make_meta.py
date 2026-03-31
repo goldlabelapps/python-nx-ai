@@ -11,5 +11,8 @@ def make_meta(severity: str, title: str) -> dict:
         "title": title,
         "version": __version__,
         "endpoint": f"{base_url}/prospects",
+        "base": base_url,
+        "base_url": base_url,
+        "message": title,
         "time": epoch,
     }
