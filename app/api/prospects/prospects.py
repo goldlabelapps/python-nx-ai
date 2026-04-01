@@ -176,15 +176,15 @@ def prospects_init() -> dict:
     data = {
         "total": total,
         "groups": { 
-            "level": {
+            "seniority": {
                 "total": total_unique_seniority,
                 "list": seniority
             },
-            "job": {
+            "title": {
                 "total": total_unique_title,
                 "list": title
             },
-            "lane": {
+            "sub_departments": {
                 "total": total_unique_sub_departments,
                 "list": sub_departments
             }
