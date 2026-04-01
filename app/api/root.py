@@ -16,7 +16,7 @@ def root() -> dict:
         "title": "NX-AI",
         "severity": "success",
         "version": __version__,
-        "endpoint": base_url,
+        "base_url": base_url,
         "time": epoch,
     }
     endpoints = [
