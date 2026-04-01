@@ -1,10 +1,12 @@
-# ![NX AI](/app/static/repoicon.png) <NEW> NX AI
+## ![NX AI](/app/static/repoicon.png) <NEW> NX AI
 
 > Python with FastAPI using Postgres & tsvector. 
 
-Open Source, production ready Python FastAPI/Postgres app. [GitHub](https://github.com/goldlabelapps/python-nx-ai) | [NX-AI onrender](https://nx-ai.onrender.com)
+Open Source, production ready Python FastAPI/Postgres app. [GitHub](https://github.com/goldlabelapps/python-nx-ai) | [NX-AI onrender](https://nx-ai.onrender.com) | [Goldlabel](https://goldlabel.pro?s=python)
 
-[Goldlabel](https://goldlabel.pro?s=python)
+- **Python 3.11+**
+- **Postgres**
+- **tsvector** - Superfast full-text search (with GIN index)
 
 ```sh
 uvicorn app.main:app  --reload
@@ -25,9 +27,6 @@ uvicorn app.main:app --reload
 
 [localhost](http://localhost:8000) | [onrender](https://nx-ai.onrender.com) 
 
-- **Python 3.11+**
-- **Postgres**
-- **tsvector** - Superfast full-text search (with GIN index)
 
 ### Full-Text Search (tsvector)
 
