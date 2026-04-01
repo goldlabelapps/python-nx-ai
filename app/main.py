@@ -7,8 +7,8 @@ import os
 from app.api.routes import router
 
 app = FastAPI(
-    title="I",
-    description="Production-ready Python with FastAPI and tsvector",
+    title="NX AI",
+    description="NX AI - FastAPI, Python, Postgres, tsvector",
     version=__version__,
 )
 
