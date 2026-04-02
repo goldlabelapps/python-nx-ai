@@ -2,14 +2,14 @@
 import httpx
 import os
 
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 RESEND_API_URL = "https://api.resend.com/emails"
 
 def send_email_resend(to: str, subject: str, html: str, sender: str) -> dict:
-    resend_api_key = os.getenv("RESEND_API_KEY")
-    if not resend_api_key:
+    if not RESEND_API_KEY:
         return {"error": "Missing RESEND_API_KEY"}
     headers = {
-        "Authorization": f"Bearer {resend_api_key}",
+        "Authorization": f"Bearer {RESEND_API_KEY}",
         "Content-Type": "application/json"
     }
     payload = {

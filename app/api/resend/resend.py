@@ -4,7 +4,7 @@ import os
 from app.utils.make_meta import make_meta
 from fastapi import APIRouter, Query, Path, Body, HTTPException
 from app.utils.db import get_db_connection
-from .utils.send_email import send_email_resend
+from app.utils.send_email import send_email_resend
 
 router = APIRouter()
 base_url = os.getenv("BASE_URL", "http://localhost:8000")
@@ -18,10 +18,7 @@ def root() -> dict:
         meta = make_meta("error", "RESEND_API_KEY is missing from environment. Please set it in your .env file.")
         return {"meta": meta}
     meta = make_meta("success", "Resend endpoint")
-    data = [
-        {"action": "send email"},
-    ]
-    return {"meta": meta, "data": data}
+    return {"meta": meta}
 
 
 # POST endpoint to send email

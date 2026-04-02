@@ -1,10 +1,11 @@
 ## ![Python](/app/static/repoicon.png) Python
 
-> Python with FastAPI using Postgres & tsvector. 
+> With FastAPI using Postgres & tsvector. 
 
-Open Source, production ready Python FastAPI/Postgres app. 
+Open Source, production ready Python FastAPI/Postgres app.  
+
 [GitHub](https://github.com/goldlabelapps/python) | 
-[onrender](https://nx-ai.onrender.com) | 
+[onr]Render](https://nx-ai.onrender.com) | 
 [by Goldlabel](https://goldlabel.pro)
 
 - **Python 3.11+**
