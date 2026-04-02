@@ -7,12 +7,9 @@ def make_meta(severity: str, title: str) -> dict:
     base_url = os.getenv("BASE_URL", "http://localhost:8000")
     epoch = int(time.time() * 1000)
     return {
-        "severity": severity,
-        "title": title,
         "version": __version__,
-        "endpoint": f"{base_url}/prospects",
-        "base": base_url,
-        "base_url": base_url,
-        "message": title,
         "time": epoch,
+        "severity": severity,
+        "message": title,
+        "base_url": base_url,
     }
