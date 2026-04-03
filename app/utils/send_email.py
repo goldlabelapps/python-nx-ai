@@ -1,26 +1,20 @@
-# Utility to send email using Resend API
-import httpx
+# Utility to send email using official Resend package
 import os
+import resend
 
-RESEND_API_KEY = os.getenv("RESEND_API_KEY")
-RESEND_API_URL = "https://api.resend.com/emails"
+resend.api_key = os.environ.get("RESEND_API_KEY")
 
-def send_email_resend(to: str, subject: str, html: str, sender: str) -> dict:
-    if not RESEND_API_KEY:
+def send_email_resend(to: str, subject: str, html: str) -> dict:
+    if not resend.api_key:
         return {"error": "Missing RESEND_API_KEY"}
-    headers = {
-        "Authorization": f"Bearer {RESEND_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "from": sender,
+    params: resend.Emails.SendParams = {
+        "from": "NX <nx@goldlabel.pro>",
         "to": [to],
         "subject": subject,
-        "html": html
+        "html": html,
     }
     try:
-        response = httpx.post(RESEND_API_URL, headers=headers, json=payload, timeout=10)
-        response.raise_for_status()
-        return response.json()
+        email: resend.Emails.SendResponse = resend.Emails.send(params)
+        return dict(email)
     except Exception as e:
         return {"error": str(e)}

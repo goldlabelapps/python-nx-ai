@@ -29,7 +29,6 @@ class EmailRequest(BaseModel):
     to: EmailStr
     subject: str
     html: str
-    sender: EmailStr
 
 @router.post("/resend", status_code=status.HTTP_202_ACCEPTED)
 def send_email(request: EmailRequest):
@@ -40,8 +39,7 @@ def send_email(request: EmailRequest):
     result = send_email_resend(
         to=request.to,
         subject=request.subject,
-        html=request.html,
-        sender=request.sender
+        html=request.html
     )
     if "error" in result:
         meta = make_meta("error", result["error"])
