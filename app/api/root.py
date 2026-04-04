@@ -13,13 +13,14 @@ def root() -> dict:
     base_url = os.getenv("BASE_URL", "http://localhost:8000")
     epoch = int(time.time() * 1000)
     meta = {
-        "title": "NX-AI",
+        "title": "Python",
         "severity": "success",
         "version": __version__,
         "base_url": base_url,
         "time": epoch,
     }
     endpoints = [
+        {"name": "gemini", "url": f"{base_url}/gemini"},
         {"name": "docs", "url": f"{base_url}/docs"},
         {"name": "resend", "url": f"{base_url}/resend"},
         {"name": "health", "url": f"{base_url}/health"},

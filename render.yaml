@@ -8,7 +8,7 @@ projects:
     - type: web
       name: nx-ai
       runtime: python
-      repo: https://github.com/goldlabelapps/nx-ai
+      repo: https://github.com/goldlabelapps/python
       plan: free
       region: oregon
       buildCommand: pip install -r requirements.txt

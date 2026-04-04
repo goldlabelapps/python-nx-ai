@@ -1,10 +1,16 @@
 ## Python FastAPI/Postgres App
 
-**Production-ready, open-source FastAPI application with PostgreSQL and blazing-fast full-text search.**
+> Production-ready, open-source FastAPI application with PostgreSQL and blazing-fast full-text search.
 
----
+#### Project Overview
 
-### 🚀 Features
+This project provides a scalable API backend using FastAPI and PostgreSQL, featuring:
+
+- Automatic full-text search on all text fields (via tsvector)
+- Endpoints for health checks, product management, prompt handling, and prospect management
+- Efficient ingestion and processing of large CSV files
+
+#### 🚀 Features
 
 - **Python 3.11+**
 - **FastAPI** — Modern, high-performance REST API
@@ -13,19 +19,7 @@
 - **Uvicorn** — Lightning-fast ASGI server
 - **Pytest** — Comprehensive testing
 
----
-
-## Project Overview
-
-This project provides a scalable API backend using FastAPI and PostgreSQL, featuring:
-
-- Automatic full-text search on all text fields (via tsvector)
-- Endpoints for health checks, product management, prompt handling, and prospect management
-- Efficient ingestion and processing of large CSV files
-
----
-
-## Getting Started
+#### Getting Started
 
 ### 1. Clone & Setup Environment
 
@@ -38,7 +32,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Run the App
+#### 2. Run the App
 
 ```bash
 uvicorn app.main:app --reload
@@ -46,16 +40,13 @@ uvicorn app.main:app --reload
 
 Visit [localhost:8000](http://localhost:8000) or [onrender](https://nx-ai.onrender.com)
 
----
-
-## API Documentation
+#### API Documentation
 
 FastAPI auto-generates interactive docs:
 
 - [Swagger UI](https://nx-ai.onrender.com/docs)
 - [ReDoc](https://nx-ai.onrender.com/redoc)
 
----
 
 ## Full-Text Search (tsvector)
 
@@ -69,13 +60,11 @@ SELECT * FROM prospects WHERE search_vector @@ plainto_tsquery('english', 'searc
 - On every insert/update, `search_vector` is computed using PostgreSQL's `to_tsvector('english', ...)`.
 - The GIN index (`idx_prospects_search_vector`) enables efficient search across large datasets.
 
----
 
 ## Processing Large CSV Files
 
 The `/prospects/process` endpoint supports robust ingestion of large CSVs (e.g., 1300+ rows, 300KB+), following the same normalization and insertion pattern as `/prospects/seed` but optimized for scale.
 
----
 
 ## Directory Structure
 
@@ -98,13 +87,11 @@ requirements.txt    # Python dependencies
 render.yaml         # Deployment config (Render.com)
 ```
 
----
 
 ## Contributing
 
 Contributions welcome. Please open issues or submit pull requests.
 
----
 
 ## License
 

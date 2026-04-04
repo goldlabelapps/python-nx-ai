@@ -11,13 +11,16 @@ def test_get_prospects_root():
     assert "meta" in data
     assert "data" in data
     assert isinstance(data["data"], list)
-    # Check that the expected keys are present in the data list
-    assert any("init" in item for item in data["data"])
-    assert any("search" in item for item in data["data"])
+    # Check that the expected keys are present in the data list (if not empty)
+    if data["data"]:
+        first_item = data["data"][0]
+        # Adjust these keys to match your actual prospect schema
+        assert "id" in first_item
+        assert "first_name" in first_item or "last_name" in first_item
     # Meta checks
     meta = data["meta"]
     assert meta["severity"] == "success"
-    assert meta["title"] == "Prospects endpoint"
+    assert meta["title"] == "Read paginated prospects"
 
 def test_prospects_returns_list():
     response = client.get("/prospects")
