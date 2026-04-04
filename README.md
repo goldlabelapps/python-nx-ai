@@ -52,8 +52,8 @@ Visit [localhost:8000](http://localhost:8000) or [onrender](https://nx-ai.onrend
 
 FastAPI auto-generates interactive docs:
 
-- [Swagger UI](http://localhost:8000/docs)
-- [ReDoc](http://localhost:8000/redoc)
+- [Swagger UI](https://nx-ai.onrender.com/docs)
+- [ReDoc](https://nx-ai.onrender.com/redoc)
 
 ---
 
@@ -102,18 +102,10 @@ render.yaml         # Deployment config (Render.com)
 
 ## Contributing
 
-Contributions are welcome! Please open issues or submit pull requests.
+Contributions welcome. Please open issues or submit pull requests.
 
 ---
 
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
----
-
-## Contact
-
-For questions or support, open an issue or contact the maintainer.
-
-
