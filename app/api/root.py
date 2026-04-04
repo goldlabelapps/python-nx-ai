@@ -20,7 +20,7 @@ def root() -> dict:
         "time": epoch,
     }
     endpoints = [
-        {"name": "gemini", "url": f"{base_url}/gemini"},
+        {"name": "llm", "url": f"{base_url}/llm"},
         {"name": "docs", "url": f"{base_url}/docs"},
         {"name": "resend", "url": f"{base_url}/resend"},
         {"name": "health", "url": f"{base_url}/health"},

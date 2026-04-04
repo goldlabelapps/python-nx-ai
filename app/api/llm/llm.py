@@ -4,15 +4,15 @@ from app.utils.make_meta import make_meta
 
 router = APIRouter()
 
-@router.get("/gemini")
+@router.get("/llm")
 def root() -> dict:
-    """GET /gemini endpoint."""
-    meta = make_meta("success", "Gemini endpoint says hello")
+    """GET /llm endpoint."""
+    meta = make_meta("success", "LLM endpoint says hello")
     return {"meta": meta}
 
-@router.post("/gemini")
-def gemini_post(payload: dict) -> dict:
-    """POST /gemini: send prompt to Gemini, returns completion google-genai SDK."""
+@router.post("/llm")
+def llm_post(payload: dict) -> dict:
+    """POST /llm: send prompt to Gemini, returns completion google-genai SDK."""
     prompt = payload.get("prompt")
     if not prompt:
         raise HTTPException(status_code=400, detail="Missing 'prompt' in request body.")
