@@ -6,5 +6,6 @@ CREATE TABLE IF NOT EXISTS llm (
 	completion TEXT NOT NULL,
 	duration FLOAT,
 	time TIMESTAMPTZ DEFAULT NOW(),
-	data JSONB
+	data JSONB,
+	model TEXT
 );

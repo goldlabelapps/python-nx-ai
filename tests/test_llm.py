@@ -33,7 +33,8 @@ def test_llm_get_endpoint():
     data = response.json()
     assert "meta" in data
     assert data["meta"]["severity"] == "success"
-    assert "LLM endpoint says hello" in data["meta"]["title"]
+    assert "LLM" in data["meta"]["title"]
+    assert "records" in data["meta"]["title"]
 
 
 def test_llm_post_endpoint(monkeypatch):
