@@ -1,4 +1,4 @@
-## Python FastAPI/Postgres App
+## Python 
 
 > Production-ready, open-source FastAPI application with PostgreSQL and blazing-fast full-text search.
 
@@ -64,29 +64,6 @@ SELECT * FROM prospects WHERE search_vector @@ plainto_tsquery('english', 'searc
 ## Processing Large CSV Files
 
 The `/prospects/process` endpoint supports robust ingestion of large CSVs (e.g., 1300+ rows, 300KB+), following the same normalization and insertion pattern as `/prospects/seed` but optimized for scale.
-
-
-## Directory Structure
-
-```
-app/
-	main.py           # FastAPI entrypoint
-	api/              # API endpoints & schemas
-		health.py
-		root.py
-		routes.py
-		products/
-		prompts/
-		prospects/
-		resend/
-		utils/
-	static/           # Static assets (e.g., repoicon.png)
-	utils/            # Utility scripts
-tests/              # Pytest test suite
-requirements.txt    # Python dependencies
-render.yaml         # Deployment config (Render.com)
-```
-
 
 ## Contributing
 
