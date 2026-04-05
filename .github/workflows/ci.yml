@@ -1,8 +1,6 @@
 name: 🍴 I TEST
 
 on:
-  push:
-    branches: ["master", "staging"]
   pull_request:
     branches: ["master", "staging"]
 jobs:
@@ -22,3 +20,6 @@ jobs:
       - name: 🧪 Run tests
         run: |
           python -m unittest discover -s tests
+
+      - name: Friendly message - End
+        run: echo "✅ All done"    
