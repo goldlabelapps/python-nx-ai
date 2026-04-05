@@ -96,6 +96,7 @@ def llm_post(payload: dict) -> dict:
             error_details = " | ".join([f"{k}: {v}" for k, v in errors.items()])
             raise Exception(f"No available Gemini model succeeded for generate_content with your API key. Details: {error_details}")
         # Insert record into llm table
+        record_id = None
         try:
             import json
             from app import __version__
@@ -105,10 +106,13 @@ def llm_post(payload: dict) -> dict:
             cur.execute(
                 """
                 INSERT INTO llm (prompt, completion, duration, data, model)
-                VALUES (%s, %s, %s, %s, %s);
+                VALUES (%s, %s, %s, %s, %s)
+                RETURNING id;
                 """,
                 (prompt, completion, duration, data_blob, used_model)
             )
+            record_id_row = cur.fetchone()
+            record_id = record_id_row[0] if record_id_row else None
             conn.commit()
             cur.close()
             conn.close()
@@ -116,7 +120,7 @@ def llm_post(payload: dict) -> dict:
             # Log DB error but do not fail the API response
             logging.error(f"Failed to insert llm record: {db_exc}")
         meta = make_meta("success", f"Gemini completion received from {used_model}")
-        return {"meta": meta, "data": {"prompt": prompt, "completion": completion}}
+        return {"meta": meta, "data": {"id": record_id, "prompt": prompt, "completion": completion}}
     except Exception as e:
         meta = make_meta("error", f"Gemini API error: {str(e)}")
         return {"meta": meta, "data": {}}
