@@ -13,25 +13,39 @@ base_url = os.getenv("BASE_URL", "http://localhost:8000")
 @router.get("/prospects")
 def get_prospects(
     page: int = Query(1, ge=1, description="Page number (1-based)"),
-    limit: int = Query(50, ge=1, le=500, description="Records per page (default 50, max 500)")
+    limit: int = Query(50, ge=1, le=500, description="Records per page (default 50, max 500)"),
+    search: str = Query(None, description="Search term for first or last name (case-insensitive, partial match)")
 ) -> dict:
-    """Return paginated, filtered, and ordered prospects (flagged first, then alphabetical by first_name)."""
+    """Return paginated, filtered, and ordered prospects (flagged first, then alphabetical by first_name), filtered by search if provided."""
     meta = make_meta("success", "Read paginated prospects")
     conn_gen = get_db_connection()
     conn = next(conn_gen)
     cur = conn.cursor()
     offset = (page - 1) * limit
     try:
-        cur.execute('SELECT COUNT(*) FROM prospects WHERE hide IS NOT TRUE;')
+        # Build WHERE clause
+        where_clauses = ["hide IS NOT TRUE"]
+        params = []
+        if search:
+            where_clauses.append("(LOWER(first_name) LIKE %s OR LOWER(last_name) LIKE %s)")
+            search_param = f"%{search.lower()}%"
+            params.extend([search_param, search_param])
+        where_sql = " AND ".join(where_clauses)
+
+        # Count query
+        count_query = f'SELECT COUNT(*) FROM prospects WHERE {where_sql};'
+        cur.execute(count_query, params)
         count_row = cur.fetchone() if cur.description is not None else None
         total = count_row[0] if count_row is not None else 0
-        # Order: flagged first (flag DESC NULLS LAST), then first_name ASC
-        cur.execute('''
+
+        # Data query
+        data_query = f'''
             SELECT * FROM prospects
-            WHERE hide IS NOT TRUE
+            WHERE {where_sql}
             ORDER BY COALESCE(flag, FALSE) DESC, first_name ASC
             OFFSET %s LIMIT %s;
-        ''', (offset, limit))
+        '''
+        cur.execute(data_query, params + [offset, limit])
         if cur.description is not None:
             columns = [desc[0] for desc in cur.description]
             rows = cur.fetchall()
