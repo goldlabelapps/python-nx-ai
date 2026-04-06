@@ -184,6 +184,29 @@ def prospects_read_one(id: int = Path(..., description="ID of the prospect to re
             if row is not None:
                 columns = [desc[0] for desc in cur.description]
                 data = dict(zip(columns, row))
+                # Fetch related llm records
+                try:
+                    from app.utils.db import get_db_connection_direct
+                    llm_conn = get_db_connection_direct()
+                    llm_cur = llm_conn.cursor()
+                    llm_cur.execute("SELECT id, prompt, completion, duration, time, data, model FROM llm WHERE prospect_id = %s ORDER BY id DESC;", (id,))
+                    llm_records = [
+                        {
+                            "id": r[0],
+                            "prompt": r[1],
+                            "completion": r[2],
+                            "duration": r[3],
+                            "time": r[4].isoformat() if r[4] else None,
+                            "data": r[5],
+                            "model": r[6],
+                        }
+                        for r in llm_cur.fetchall()
+                    ]
+                    llm_cur.close()
+                    llm_conn.close()
+                    data["llm_records"] = llm_records
+                except Exception as llm_exc:
+                    data["llm_records"] = []
             else:
                 data = None
                 meta = make_meta("error", f"No prospect found with id {id}")
