@@ -1,7 +1,8 @@
 import os
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, HTTPException, Query, Request, Depends
 from app.utils.make_meta import make_meta
 from app.utils.db import get_db_connection_direct
+from app.utils.api_key_auth import get_api_key
 
 router = APIRouter()
 
@@ -10,6 +11,7 @@ def get_llm_records(
     request: Request,
     page: int = Query(1, ge=1, description="Page number (1-based)"),
     page_size: int = Query(10, ge=1, le=100, description="Records per page")
+    , api_key: str = Depends(get_api_key)
 ) -> dict:
     """GET /llm: Paginated list of LLM completions."""
     try:
