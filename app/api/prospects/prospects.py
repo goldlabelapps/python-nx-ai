@@ -1,4 +1,3 @@
-
 from app import __version__
 import os
 from app.utils.make_meta import make_meta
@@ -42,7 +41,7 @@ def get_prospects(
         data_query = f'''
             SELECT * FROM prospects
             WHERE {where_sql}
-            ORDER BY COALESCE(flag, FALSE) DESC, first_name ASC
+            ORDER BY first_name ASC
             OFFSET %s LIMIT %s;
         '''
         cur.execute(data_query, params + [offset, limit])

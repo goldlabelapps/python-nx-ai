@@ -23,7 +23,13 @@ def root() -> dict:
         {"name": "docs", "url": f"{base_url}/docs"},
         {"name": "resend", "url": f"{base_url}/resend"},
         {"name": "health", "url": f"{base_url}/health"},
-        {"name": "prospects", "url": f"{base_url}/prospects"},
         {"name": "llm", "url": f"{base_url}/llm"},
+        {
+            "name": "prospects", 
+            "endpoints": [
+                {"name": "list", "url": f"{base_url}/prospects"},
+                {"name": "flagged", "url": f"{base_url}/prospects/flagged"},
+            ]
+        }
     ]
     return {"meta": meta, "data": endpoints}
