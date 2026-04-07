@@ -13,7 +13,7 @@ def test_resend_post_email(monkeypatch):
 
     payload = {
         "to": 'listingslab@gmail.com',
-        "subject": "Python pytest",
+        "subject": "pytest",
         "html": "Python tests have run"
     }
     response = client.post("/resend", json=payload)

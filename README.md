@@ -1,4 +1,4 @@
-## Python 
+## Python°
 
 > Production-ready, open-source FastAPI application with PostgreSQL and blazing-fast full-text search.
 
