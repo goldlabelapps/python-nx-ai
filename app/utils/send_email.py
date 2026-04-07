@@ -8,7 +8,7 @@ def send_email_resend(to: str, subject: str, html: str) -> dict:
     if not resend.api_key:
         return {"error": "Missing RESEND_API_KEY"}
     params: resend.Emails.SendParams = {
-        "from": "NX <nx@goldlabel.pro>",
+        "from": "NX° <nx@goldlabel.pro>",
         "to": [to],
         "subject": subject,
         "html": html,

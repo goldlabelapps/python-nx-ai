@@ -9,12 +9,12 @@ def test_get_prospects_root():
     assert response.status_code == 200
     data = response.json()
     assert "meta" in data
+    assert "pagination" in data
     assert "data" in data
     assert isinstance(data["data"], list)
     # Check that the expected keys are present in the data list (if not empty)
     if data["data"]:
         first_item = data["data"][0]
-        # Adjust these keys to match your actual prospect schema
         assert "id" in first_item
         assert "first_name" in first_item or "last_name" in first_item
     # Meta checks
@@ -27,5 +27,6 @@ def test_prospects_returns_list():
     assert response.status_code == 200
     data = response.json()
     assert "meta" in data
+    assert "pagination" in data
     assert "data" in data
-    assert isinstance(data["data"], list) or isinstance(data["data"], dict)
+    assert isinstance(data["data"], list)

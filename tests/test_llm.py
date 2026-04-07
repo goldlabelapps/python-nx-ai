@@ -28,13 +28,17 @@ client = TestClient(app)
 
 
 def test_llm_get_endpoint():
-    response = client.get("/llm")
+    api_key = os.getenv("PYTHON_KEY", "test")
+    response = client.get("/llm", headers={"X-API-Key": api_key})
     assert response.status_code == 200
     data = response.json()
     assert "meta" in data
     assert data["meta"]["severity"] == "success"
     assert "LLM" in data["meta"]["title"]
     assert "records" in data["meta"]["title"]
+    assert "data" in data
+    assert "data" in data["data"]
+    assert isinstance(data["data"]["data"], list)
 
 
 def test_llm_post_endpoint(monkeypatch):
@@ -51,8 +55,9 @@ def test_llm_post_endpoint(monkeypatch):
 
     monkeypatch.setattr("google.genai.Client", lambda *args, **kwargs: MockGenAIClient())
 
+    api_key = os.getenv("PYTHON_KEY", "test")
     payload = {"prompt": "Test prompt"}
-    response = client.post("/llm", json=payload)
+    response = client.post("/llm", json=payload, headers={"X-API-Key": api_key})
     assert response.status_code == 200
     data = response.json()
     assert "meta" in data

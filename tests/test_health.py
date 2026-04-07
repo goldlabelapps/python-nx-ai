@@ -13,12 +13,7 @@ def test_health_endpoint():
     assert response.json() == {"status": "ok"}
 
 def test_health_meta_keys():
+    # The /health endpoint now only returns {"status": "ok"}
     response = client.get("/health")
-    data = response.json()
-    if "meta" in data:
-        meta = data["meta"]
-        for key in ["severity", "title", "version", "base_url", "time"]:
-            assert key in meta
-    else:
-        # Legacy: no meta, just status
-        assert data == {"status": "ok"}
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
