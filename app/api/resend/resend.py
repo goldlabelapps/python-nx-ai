@@ -17,8 +17,31 @@ def root() -> dict:
     if not RESEND_API_KEY:
         meta = make_meta("error", "RESEND_API_KEY is missing from environment. Please set it in your .env file.")
         return {"meta": meta}
-    meta = make_meta("success", "Resend endpoint")
-    return {"meta": meta}
+    meta = make_meta("success", "GET /resend endpoint")
+    return {
+        "meta": meta,
+        "data": {
+            "hint": "Use POST /resend to send an email via Resend API.",
+            "type": {
+                "to": {
+                    "type": "string",
+                    "format": "email",
+                    "required": True,
+                    "description": "Recipient email address."
+                },
+                "subject": {
+                    "type": "string",
+                    "required": True,
+                    "description": "Subject of the email."
+                },
+                "html": {
+                    "type": "string",
+                    "required": True,
+                    "description": "HTML content of the email."
+                }
+            }
+        }
+    }
 
 
 # POST endpoint to send email
