@@ -13,7 +13,8 @@ base_url = os.getenv("BASE_URL", "http://localhost:8000")
 def get_prospects(
     page: int = Query(1, ge=1, description="Page number (1-based)"),
     limit: int = Query(100, ge=1, le=500, description="Records per page (default 100, max 500)"),
-    search: str = Query(None, description="Search term for first or last name (case-insensitive, partial match)")
+    search: str = Query(None, description="Search term for first or last name (case-insensitive, partial match)"),
+    hideflagged: bool = Query(False, description="If true, flagged records are excluded")
 ) -> dict:
     """Return paginated, filtered, and ordered prospects (then alphabetical by first_name), filtered by search if provided."""
     meta = make_meta("success", "Read paginated prospects")
@@ -25,6 +26,8 @@ def get_prospects(
         # Build WHERE clause
         where_clauses = ["hide IS NOT TRUE"]
         params = []
+        if hideflagged:
+            where_clauses.append("flag IS NOT TRUE")
         if search:
             where_clauses.append("(LOWER(first_name) LIKE %s OR LOWER(last_name) LIKE %s)")
             search_param = f"%{search.lower()}%"
