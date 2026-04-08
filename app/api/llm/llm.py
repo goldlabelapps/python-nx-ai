@@ -10,49 +10,88 @@ router = APIRouter()
 def get_llm_records(
     request: Request,
     page: int = Query(1, ge=1, description="Page number (1-based)"),
-    page_size: int = Query(10, ge=1, le=100, description="Records per page")
-    , api_key: str = Depends(get_api_key)
+    page_size: int = Query(10, ge=1, le=100, description="Records per page"),
+    prospect_id: int = Query(None, description="Filter by prospect_id"),
+    api_key: str = Depends(get_api_key)
 ) -> dict:
     """GET /llm: Paginated list of LLM completions."""
     try:
         conn = get_db_connection_direct()
         cur = conn.cursor()
-        offset = (page - 1) * page_size
-        cur.execute("SELECT COUNT(*) FROM llm;")
-        count_row = cur.fetchone()
-        total = count_row[0] if count_row and count_row[0] is not None else 0
-        cur.execute("""
-            SELECT id, prompt, completion, duration, time, data, model, prospect_id
-            FROM llm
-            ORDER BY id DESC
-            LIMIT %s OFFSET %s;
-        """, (page_size, offset))
-        records = [
-            {
-                "id": row[0],
-                "prompt": row[1],
-                "completion": row[2],
-                "duration": row[3],
-                "time": row[4].isoformat() if row[4] else None,
-                "data": row[5],
-                "model": row[6],
-                "prospect_id": row[7],
+        if prospect_id is not None:
+            # No pagination for single prospect_id lookup
+            select_query = """
+                SELECT id, prompt, completion, duration, time, data, model, prospect_id
+                FROM llm
+                WHERE prospect_id = %s
+                ORDER BY id DESC
+            """
+            cur.execute(select_query, (prospect_id,))
+            rows = cur.fetchall()
+            records = [
+                {
+                    "id": row[0],
+                    "prompt": row[1],
+                    "completion": row[2],
+                    "duration": row[3],
+                    "time": row[4].isoformat() if row[4] else None,
+                    "data": row[5],
+                    "model": row[6],
+                    "prospect_id": row[7],
+                }
+                for row in rows
+            ]
+            cur.close()
+            conn.close()
+            if records:
+                meta = make_meta("success", f"Found {len(records)} record(s) for prospect_id {prospect_id}")
+                return {
+                    "meta": meta,
+                    "data": records,
+                }
+            else:
+                meta = make_meta("warning", f"No records found for prospect_id {prospect_id}")
+                return {
+                    "meta": meta,
+                    "data": [],
+                }
+        else:
+            offset = (page - 1) * page_size
+            cur.execute("SELECT COUNT(*) FROM llm;")
+            count_row = cur.fetchone()
+            total = count_row[0] if count_row and count_row[0] is not None else 0
+            cur.execute("""
+                SELECT id, prompt, completion, duration, time, data, model, prospect_id
+                FROM llm
+                ORDER BY id DESC
+                LIMIT %s OFFSET %s;
+            """, (page_size, offset))
+            records = [
+                {
+                    "id": row[0],
+                    "prompt": row[1],
+                    "completion": row[2],
+                    "duration": row[3],
+                    "time": row[4].isoformat() if row[4] else None,
+                    "data": row[5],
+                    "model": row[6],
+                    "prospect_id": row[7],
+                }
+                for row in cur.fetchall()
+            ]
+            cur.close()
+            conn.close()
+            meta = make_meta("success", f"LLM {len(records)} records (page {page})")
+            return {
+                "meta": meta,
+                "data": {
+                    "page": page,
+                    "page_size": page_size,
+                    "total": total,
+                    "pages": (total + page_size - 1) // page_size,
+                    "data": records,
+                },
             }
-            for row in cur.fetchall()
-        ]
-        cur.close()
-        conn.close()
-        meta = make_meta("success", f"LLM {len(records)} records (page {page})")
-        return {
-            "meta": meta,
-            "data": {
-                "page": page,
-                "page_size": page_size,
-                "total": total,
-                "pages": (total + page_size - 1) // page_size,
-                "data": records,
-            },
-        }
     except Exception as e:
         meta = make_meta("error", f"DB error: {str(e)}")
         return {"meta": meta, "data": {}}

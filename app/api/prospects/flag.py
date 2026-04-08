@@ -1,13 +1,35 @@
+
 from app import __version__
 import os
 from app.utils.make_meta import make_meta
 from fastapi import APIRouter, Query, Path, Body, HTTPException
+from fastapi.responses import JSONResponse
 from app.utils.db import get_db_connection
 
 router = APIRouter()
 base_url = os.getenv("BASE_URL", "http://localhost:8000")
 
-
+# Route to unflag all prospects
+@router.post("/unflag-all")
+def unflag_all_prospects():
+    """Reset all flags in the prospects table to false."""
+    meta = make_meta("success", "All flags reset to false")
+    conn_gen = get_db_connection()
+    conn = next(conn_gen)
+    cur = conn.cursor()
+    try:
+        cur.execute("UPDATE prospects SET flag = FALSE WHERE flag IS TRUE;")
+        affected = cur.rowcount
+        conn.commit()
+        meta = make_meta("success", f"{affected} prospects unflagged.")
+    except Exception as e:
+        conn.rollback()
+        meta = make_meta("error", f"Failed to unflag all prospects: {str(e)}")
+        return JSONResponse(status_code=500, content={"meta": meta})
+    finally:
+        cur.close()
+        conn.close()
+    return {"meta": meta}
 
 
 # Gel all flagged prspects

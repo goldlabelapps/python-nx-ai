@@ -21,4 +21,15 @@ def test_health_returns_ok() -> None:
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 
+def test_unflag_all_prospects():
+    """POST /unflag-all should reset all flags to false and return success meta."""
+    # First, flag some prospects (if needed) - skipping setup for brevity
+    response = client.post("/unflag-all")
+    assert response.status_code == 200
+    json_data = response.json()
+    # The meta dict uses 'severity' for status, not 'status'
+    assert json_data["meta"].get("severity") == "success"
+    # Accept any success message in the title
+    assert json_data["meta"].get("title", "").endswith("unflagged.")
+
 
