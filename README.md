@@ -26,7 +26,7 @@ This project provides a scalable API backend using FastAPI and PostgreSQL, featu
 ### 1. Clone & Setup Environment
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/goldlabelapps/python.git
 cd python
 cp .env.sample .env  # Add your Postgres credentials and settings
 python -m venv venv
