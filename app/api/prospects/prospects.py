@@ -135,6 +135,26 @@ def prospects_read_one(id: int = Path(..., description="ID of the prospect to re
     return {"meta": meta, "data": data}
 
 
+# PATCH endpoint to factory reset all prospects (ensure only one definition, at end of file)
+@router.patch("/prospects/factoryreset")
+def factory_reset_prospects() -> dict:
+    """Reset all prospects' flag and hide fields to False."""
+    meta = make_meta("success", "Factory reset all prospects (flag, hide)")
+    conn_gen = get_db_connection()
+    conn = next(conn_gen)
+    cur = conn.cursor()
+    try:
+        cur.execute("UPDATE prospects SET flag = FALSE, hide = FALSE;")
+        conn.commit()
+        data = {"reset": True}
+    except Exception as e:
+        meta = make_meta("error", f"Failed to factory reset: {str(e)}")
+        data = {"reset": False}
+    finally:
+        cur.close()
+        conn.close()
+    return {"meta": meta, "data": data}
+
 # PATCH endpoint to update flag/hide
 @router.patch("/prospects/{id}")
 def update_prospect(id: int = Path(..., description="ID of the prospect to update"), update: ProspectUpdate = Body(...)) -> dict:
@@ -171,6 +191,28 @@ def update_prospect(id: int = Path(..., description="ID of the prospect to updat
     except Exception as e:
         data = None
         meta = make_meta("error", f"Failed to update prospect: {str(e)}")
+    finally:
+        cur.close()
+        conn.close()
+    return {"meta": meta, "data": data}
+
+
+
+# PATCH endpoint to factory reset all prospects (ensure only one definition, at end of file)
+@router.patch("/prospects/factoryreset")
+def factory_reset_prospects() -> dict:
+    """Reset all prospects' flag and hide fields to False."""
+    meta = make_meta("success", "Factory reset all prospects (flag, hide)")
+    conn_gen = get_db_connection()
+    conn = next(conn_gen)
+    cur = conn.cursor()
+    try:
+        cur.execute("UPDATE prospects SET flag = FALSE, hide = FALSE;")
+        conn.commit()
+        data = {"reset": True}
+    except Exception as e:
+        meta = make_meta("error", f"Failed to factory reset: {str(e)}")
+        data = {"reset": False}
     finally:
         cur.close()
         conn.close()
