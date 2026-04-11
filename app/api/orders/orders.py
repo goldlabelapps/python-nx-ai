@@ -7,15 +7,12 @@ from app.utils.db import get_db_connection
 router = APIRouter()
 base_url = os.getenv("BASE_URL", "http://localhost:8000")
 
-
-
-
 # Refactored GET /orders endpoint to return paginated, filtered, and ordered results
 @router.get("/orders")
 def get_orders(
     page: int = Query(1, ge=1, description="Page number (1-based)"),
     limit: int = Query(100, ge=1, le=500, description="Records per page (default 100, max 500)"),
-    search: str = Query(None, description="Search string (case-insensitive, partial match)"),
+    s: str = Query(None, alias="s", description="Search string (case-insensitive, partial match)"),
     hideflagged: bool = Query(False, description="If true, flagged records are excluded")
 ) -> dict:
     """Return paginated, filtered, and ordered records, filtered by search if provided."""
@@ -30,7 +27,17 @@ def get_orders(
         params = []
         if hideflagged:
             where_clauses.append("flag IS NOT TRUE")
-        # No first_name/last_name search, as those columns do not exist
+        if s:
+            # Search in name, description, or categories (case-insensitive, partial match)
+            where_clauses.append("(" +
+                " OR ".join([
+                    "LOWER(name) LIKE %s",
+                    "LOWER(description) LIKE %s",
+                    "LOWER(categories) LIKE %s"
+                ]) + ")"
+            )
+            search_param = f"%{s.lower()}%"
+            params.extend([search_param, search_param, search_param])
         where_sql = " AND ".join(where_clauses)
 
         # Count query
@@ -60,12 +67,16 @@ def get_orders(
         cur.close()
         conn.close()
     return {
+        
         "meta": meta,
         "pagination": {
             "page": page,
             "limit": limit,
             "total": total,
             "pages": (total // limit) + (1 if total % limit else 0)
+        },
+        "search": {
+            "searchStr": s
         },
         "data": data,
     }
