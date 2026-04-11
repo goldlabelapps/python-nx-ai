@@ -19,9 +19,24 @@ def import_csv_to_orders():
     total = 0
     with conn:
         with conn.cursor() as cur:
+            print("Clearing orders table before import...")
+            cur.execute("TRUNCATE TABLE orders;")
+            print("orders table cleared.")
+            seen_skus = set()
             with open(CSV_PATH, newline='', encoding='utf-8') as csvfile:
                 reader = csv.DictReader(csvfile)
                 for idx, row in enumerate(reader):
+                    original_sku = row.get("sku")
+                    new_sku = original_sku
+                    # Ensure SKU is unique in this import batch
+                    suffix = 1
+                    while new_sku in seen_skus:
+                        new_sku = f"{original_sku}_{suffix}"
+                        suffix += 1
+                    if new_sku != original_sku:
+                        print(f"Duplicate SKU found: {original_sku}, changed to {new_sku}")
+                    row["sku"] = new_sku
+                    seen_skus.add(new_sku)
                     total += 1
                     # Add hide and flag fields if not present
                     row.setdefault("hide", False)
@@ -54,7 +69,7 @@ def import_csv_to_orders():
                                     except Exception:
                                         values[i] = None
                     placeholders = ','.join(['%s'] * len(ORDERS_COLUMNS))
-                    sql = f"INSERT INTO orders ({', '.join(ORDERS_COLUMNS)}) VALUES ({placeholders}) ON CONFLICT (sku) DO NOTHING"
+                    sql = f"INSERT INTO orders ({', '.join(ORDERS_COLUMNS)}) VALUES ({placeholders})"
                     try:
                         cur.execute(sql, values)
                         inserted += 1

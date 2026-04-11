@@ -8,6 +8,8 @@ router = APIRouter()
 base_url = os.getenv("BASE_URL", "http://localhost:8000")
 
 
+
+
 # Refactored GET /orders endpoint to return paginated, filtered, and ordered results
 @router.get("/orders")
 def get_orders(
@@ -28,10 +30,7 @@ def get_orders(
         params = []
         if hideflagged:
             where_clauses.append("flag IS NOT TRUE")
-        if search:
-            where_clauses.append("(LOWER(first_name) LIKE %s OR LOWER(last_name) LIKE %s)")
-            search_param = f"%{search.lower()}%"
-            params.extend([search_param, search_param])
+        # No first_name/last_name search, as those columns do not exist
         where_sql = " AND ".join(where_clauses)
 
         # Count query
@@ -42,9 +41,8 @@ def get_orders(
 
         # Data query
         data_query = f'''
-            SELECT * FROM prospects
+            SELECT * FROM orders
             WHERE {where_sql}
-            ORDER BY first_name ASC
             OFFSET %s LIMIT %s;
         '''
         cur.execute(data_query, params + [offset, limit])
@@ -57,7 +55,7 @@ def get_orders(
     except Exception as e:
         data = []
         total = 0
-        meta = make_meta("error", f"Failed to read prospects: {str(e)}")
+        meta = make_meta("error", f"Failed to read orders: {str(e)}")
     finally:
         cur.close()
         conn.close()
