@@ -9,7 +9,7 @@
 This project provides a scalable API backend using FastAPI and PostgreSQL, featuring:
 
 - Automatic full-text search on all text fields (via tsvector)
-- Endpoints for health checks, product management, prompt handling, and prospect management
+- Endpoints for health checks, product management, prompt handling (via `/prompt`), resend email, and prospect management
 - Efficient ingestion and processing of large CSV files
 
 #### 🚀 Features
@@ -42,6 +42,7 @@ uvicorn app.main:app --reload
 
 Visit [localhost:8000](http://localhost:8000) or [onrender](https://nx-ai.onrender.com)
 
+
 #### API Documentation
 
 FastAPI auto-generates interactive docs:
@@ -49,6 +50,13 @@ FastAPI auto-generates interactive docs:
 - [Swagger UI](https://nx-ai.onrender.com/docs)
 - [ReDoc](https://nx-ai.onrender.com/redoc)
 
+#### Notable Endpoints
+
+- `GET /health` — Health check
+- `GET/POST /prompt` — LLM prompt completion (formerly `/llm`)
+- `GET/POST /resend` — Send email via Resend API (see implementation in `app/utils/notify/resend.py`)
+- `GET /prospects` — Paginated prospects
+- `POST /prospects/process` — Bulk CSV ingestion
 
 ## Full-Text Search (tsvector)
 
