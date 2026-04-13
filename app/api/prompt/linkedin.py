@@ -9,10 +9,10 @@ router = APIRouter()
 
 @router.post("/prompt/linkedin")
 def linkedin_prompt_success(payload: dict, api_key: str = Depends(get_api_key)) -> dict:
-    """POST /prompt/linkedin: return cached completion for linkedinUrl when available."""
-    linkedin_url = (payload.get("linkedinUrl") or "").strip()
+    """POST /prompt/linkedin: return cached completion for linkedin_url when available."""
+    linkedin_url = (payload.get("linkedin_url") or payload.get("linkedinUrl") or "").strip()
     if not linkedin_url:
-        raise HTTPException(status_code=400, detail="Missing 'linkedinUrl' in request body.")
+        raise HTTPException(status_code=400, detail="Missing 'linkedin_url' in request body.")
 
     conn = None
     cur = None
@@ -21,14 +21,44 @@ def linkedin_prompt_success(payload: dict, api_key: str = Depends(get_api_key)) 
         cur = conn.cursor()
         cur.execute(
             """
-            SELECT id, completion, time, model, data
-            FROM prompt
-            WHERE (data->>'linkedinUrl' = %s OR prompt ILIKE %s)
-            ORDER BY id DESC
-            LIMIT 1;
-            """,
-            (linkedin_url, f"%{linkedin_url}%"),
+            SELECT EXISTS (
+                SELECT 1
+                FROM information_schema.columns
+                WHERE table_schema = 'public'
+                  AND table_name = 'prompt'
+                  AND column_name = 'search_vector'
+            );
+            """
         )
+        exists_row = cur.fetchone()
+        has_search_vector = bool(exists_row and exists_row[0])
+
+        if has_search_vector:
+            cur.execute(
+                """
+                SELECT id, completion, time, model, data
+                FROM prompt
+                WHERE (
+                    COALESCE(data->>'linkedin_url', data->>'linkedinUrl') = %s
+                    OR search_vector @@ plainto_tsquery('english', %s)
+                    OR prompt ILIKE %s
+                )
+                ORDER BY id DESC
+                LIMIT 1;
+                """,
+                (linkedin_url, linkedin_url, f"%{linkedin_url}%"),
+            )
+        else:
+            cur.execute(
+                """
+                SELECT id, completion, time, model, data
+                FROM prompt
+                WHERE (COALESCE(data->>'linkedin_url', data->>'linkedinUrl') = %s OR prompt ILIKE %s)
+                ORDER BY id DESC
+                LIMIT 1;
+                """,
+                (linkedin_url, f"%{linkedin_url}%"),
+            )
         row = cur.fetchone()
 
         if row:
@@ -37,7 +67,7 @@ def linkedin_prompt_success(payload: dict, api_key: str = Depends(get_api_key)) 
                 "data": {
                     "cached": True,
                     "id": row[0],
-                    "linkedinUrl": linkedin_url,
+                    "linkedin_url": linkedin_url,
                     "completion": row[1],
                     "time": row[2].isoformat() if row[2] else None,
                     "model": row[3],
@@ -49,7 +79,7 @@ def linkedin_prompt_success(payload: dict, api_key: str = Depends(get_api_key)) 
             "meta": make_meta("warning", "LinkedIn URL not analysed yet"),
             "data": {
                 "cached": False,
-                "linkedinUrl": linkedin_url,
+                "linkedin_url": linkedin_url,
                 "completion": None,
             },
         }
