@@ -21,7 +21,7 @@ This project provides a scalable API backend using FastAPI and PostgreSQL, featu
 - **Uvicorn** — Lightning-fast ASGI server
 - **Pytest** — Comprehensive testing
 
-#### Getting Started
+#### Install & Use
 
 ### 1. Clone & Setup Environment
 
