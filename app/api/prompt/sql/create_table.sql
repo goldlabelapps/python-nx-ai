@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS prompt (
 	completion TEXT NOT NULL,
 	duration FLOAT,
 	time TIMESTAMPTZ DEFAULT NOW(),
-	data JSONB,
 	model TEXT,
-	prospect_id INTEGER REFERENCES prospects(id)
+	data JSONB
 );

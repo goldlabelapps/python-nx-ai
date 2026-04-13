@@ -11,87 +11,47 @@ def get_prompt_records(
     request: Request,
     page: int = Query(1, ge=1, description="Page number (1-based)"),
     page_size: int = Query(10, ge=1, le=100, description="Records per page"),
-    prospect_id: int = Query(None, description="Filter by prospect_id"),
     api_key: str = Depends(get_api_key)
 ) -> dict:
     """GET /prompt: Paginated list of prompt completions."""
     try:
         conn = get_db_connection_direct()
         cur = conn.cursor()
-        if prospect_id is not None:
-            # No pagination for single prospect_id lookup
-            select_query = """
-                SELECT id, prompt, completion, duration, time, data, model, prospect_id
-                FROM prompt
-                WHERE prospect_id = %s
-                ORDER BY id DESC
-            """
-            cur.execute(select_query, (prospect_id,))
-            rows = cur.fetchall()
-            records = [
-                {
-                    "id": row[0],
-                    "prompt": row[1],
-                    "completion": row[2],
-                    "duration": row[3],
-                    "time": row[4].isoformat() if row[4] else None,
-                    "data": row[5],
-                    "model": row[6],
-                    "prospect_id": row[7],
-                }
-                for row in rows
-            ]
-            cur.close()
-            conn.close()
-            if records:
-                meta = make_meta("success", f"Found {len(records)} record(s) for prospect_id {prospect_id}")
-                return {
-                    "meta": meta,
-                    "data": records,
-                }
-            else:
-                meta = make_meta("warning", f"No records found for prospect_id {prospect_id}")
-                return {
-                    "meta": meta,
-                    "data": [],
-                }
-        else:
-            offset = (page - 1) * page_size
-            cur.execute("SELECT COUNT(*) FROM prompt;")
-            count_row = cur.fetchone()
-            total = count_row[0] if count_row and count_row[0] is not None else 0
-            cur.execute("""
-                SELECT id, prompt, completion, duration, time, data, model, prospect_id
-                FROM prompt
-                ORDER BY id DESC
-                LIMIT %s OFFSET %s;
-            """, (page_size, offset))
-            records = [
-                {
-                    "id": row[0],
-                    "prompt": row[1],
-                    "completion": row[2],
-                    "duration": row[3],
-                    "time": row[4].isoformat() if row[4] else None,
-                    "data": row[5],
-                    "model": row[6],
-                    "prospect_id": row[7],
-                }
-                for row in cur.fetchall()
-            ]
-            cur.close()
-            conn.close()
-            meta = make_meta("success", f"Prompt {len(records)} records (page {page})")
-            return {
-                "meta": meta,
-                "data": {
-                    "page": page,
-                    "page_size": page_size,
-                    "total": total,
-                    "pages": (total + page_size - 1) // page_size,
-                    "data": records,
-                },
+        offset = (page - 1) * page_size
+        cur.execute("SELECT COUNT(*) FROM prompt;")
+        count_row = cur.fetchone()
+        total = count_row[0] if count_row and count_row[0] is not None else 0
+        cur.execute("""
+            SELECT id, prompt, completion, duration, time, data, model
+            FROM prompt
+            ORDER BY id DESC
+            LIMIT %s OFFSET %s;
+        """, (page_size, offset))
+        records = [
+            {
+                "id": row[0],
+                "prompt": row[1],
+                "completion": row[2],
+                "duration": row[3],
+                "time": row[4].isoformat() if row[4] else None,
+                "data": row[5],
+                "model": row[6],
             }
+            for row in cur.fetchall()
+        ]
+        cur.close()
+        conn.close()
+        meta = make_meta("success", f"Prompt {len(records)} records (page {page})")
+        return {
+            "meta": meta,
+            "data": {
+                "page": page,
+                "page_size": page_size,
+                "total": total,
+                "pages": (total + page_size - 1) // page_size,
+                "data": records,
+            },
+        }
     except Exception as e:
         meta = make_meta("error", f"DB error: {str(e)}")
         return {"meta": meta, "data": {}}
@@ -100,7 +60,6 @@ def get_prompt_records(
 def llm_post(payload: dict) -> dict:
     """POST /prompt: send prompt to Gemini, returns completion google-genai SDK."""
     prompt = payload.get("prompt")
-    prospect_id = payload.get("prospect_id")
     if not prompt:
         raise HTTPException(status_code=400, detail="Missing 'prompt' in request body.")
     api_key = os.getenv("GEMINI_API_KEY")
@@ -148,11 +107,11 @@ def llm_post(payload: dict) -> dict:
             cur = conn.cursor()
             cur.execute(
                 """
-                INSERT INTO prompt (prompt, completion, duration, data, model, prospect_id)
-                VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO prompt (prompt, completion, duration, data, model)
+                VALUES (%s, %s, %s, %s, %s)
                 RETURNING id;
                 """,
-                (prompt, completion, duration, data_blob, used_model, prospect_id)
+                (prompt, completion, duration, data_blob, used_model)
             )
             record_id_row = cur.fetchone()
             record_id = record_id_row[0] if record_id_row else None
