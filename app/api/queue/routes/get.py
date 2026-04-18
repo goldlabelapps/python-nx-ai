@@ -33,14 +33,22 @@ def read_queue() -> dict:
         rows = cursor.fetchall()
         most_recent = [dict(zip(columns, row)) for row in rows] if rows and columns else []
 
+        # 4. Get unique values from collection and group columns
+        cursor.execute("SELECT DISTINCT collection FROM queue WHERE collection IS NOT NULL;")
+        collections = [row[0] for row in cursor.fetchall()]
+        cursor.execute('SELECT DISTINCT "group" FROM queue WHERE "group" IS NOT NULL;')
+        groups = [row[0] for row in cursor.fetchall()]
+
         conn.close()
 
         return {
             "meta": make_meta("success", "Queue table info"),
             "data": {
-                "queued": record_count,
-                "most_recent": most_recent,
-                # "schema": schema
+                "in_queue": record_count,
+                "collections": collections,
+                "groups": groups,
+                "example": most_recent[:1],
+                # "queue_schema": schema
             }
         }
     except Exception as e:

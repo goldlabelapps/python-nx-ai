@@ -47,30 +47,30 @@ def import_linkedin_csv() -> dict:
                     first_row = row.copy()
                     print("DEBUG: First parsed row from CSV:", first_row)
                 batch.append([
-                    row.get('First Name'),
-                    row.get('Last Name'),
-                    row.get('URL'),
-                    row.get('Email Address'),
-                    row.get('Company'),
-                    row.get('Position'),
-                    row.get('Connected On'),
-                    now,
-                    now,
-                    False,
-                    'prospects',
-                    'linkedin'
+                    row.get('First Name'),                # first_name
+                    row.get('Last Name'),                 # last_name
+                    row.get('URL'),                       # linkedin
+                    row.get('Email Address'),             # email
+                    row.get('Company'),                   # company
+                    row.get('Position'),                  # position
+                    row.get('Connected On'),              # connected_on
+                    now,                                  # created
+                    now,                                  # updated
+                    False,                                # hidden
+                    'prospects',                          # collection
+                    'linkedin'                            # group
                 ])
                 imported_count += 1
                 if len(batch) >= batch_size:
                     cursor.executemany(
-                        '''INSERT INTO queue (first_name, last_name, url, email_address, company, position, connected_on, created, updated, hidden, collection, "group")
+                        '''INSERT INTO queue (first_name, last_name, linkedin, email, company, position, connected_on, created, updated, hidden, collection, "group")
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
                         batch
                     )
                     batch = []
             if batch:
                 cursor.executemany(
-                    '''INSERT INTO queue (first_name, last_name, url, email_address, company, position, connected_on, created, updated, hidden, collection, "group")
+                    '''INSERT INTO queue (first_name, last_name, linkedin, email, company, position, connected_on, created, updated, hidden, collection, "group")
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
                     batch
                 )
