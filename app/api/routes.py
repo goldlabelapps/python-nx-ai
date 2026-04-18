@@ -13,6 +13,7 @@ from app.api.prompt.linkedin import router as linkedin_router
 from app.api.prompt.drop import router as drop_router
 from app.api.prospects.prospects import router as prospects_router
 from app.api.orders.orders import router as orders_router
+from app.api.queue.queue import router as queue_router
 
 router.include_router(root_router)
 router.include_router(resend_router)
@@ -22,3 +23,4 @@ router.include_router(linkedin_router)
 router.include_router(drop_router)
 router.include_router(prospects_router)
 router.include_router(orders_router)
+router.include_router(queue_router)

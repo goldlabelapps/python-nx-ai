@@ -22,6 +22,12 @@ def root() -> dict:
     endpoints = [
         {"name": "health", "url": f"{base_url}/health"},
         {
+            "name": "Queue", 
+            "endpoints": [
+                {"name": "list", "url": f"{base_url}/queue"},
+            ]
+        },
+        {
             "name": "Prompt°", 
             "endpoints": [
                 {"name": "list", "url": f"{base_url}/prompt"},
