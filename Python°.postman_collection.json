@@ -1,0 +1,634 @@
+{
+  "info": {
+    "_postman_id": "6354fc17-227d-4c13-aa12-2aa85d09e209",
+    "name": "Python°",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47659302",
+    "_collection_link": "https://go.postman.co/collection/47659302-6354fc17-227d-4c13-aa12-2aa85d09e209?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "nx-ai.onrender.com",
+      "item": [
+        {
+          "name": "base_url",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://nx-ai.onrender.com",
+              "protocol": "https",
+              "host": [
+                "nx-ai",
+                "onrender",
+                "com"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8K°",
+      "item": [
+        {
+          "name": "prompts",
+          "item": [
+            {
+              "name": "8K/prompt/linkedin",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"linkedin_url\": \"https://www.linkedin.com/in/chris-dorward/\",\n    \"prompt\": \"You are a senior sales intelligence analyst with 20 years of experience in sales and marketing.\\n\\nYour task is to analyze a LinkedIn profile based on the linkedin_url. These URLs are my real connections. For each profile, infer actionable commercial insights about who the person is (including their full name), what they do, who they work for, and whether they are a strong prospect for NX° — a Next.js multi-tenant app developed by Goldlabel Apps for e-commerce and SaaS businesses.\\n\\nPay special attention to their current company:\\n- Identify the company they work for\\n- Find out if the company has a website (include the URL if possible)\\n\\n=== PERSON ===\\nLinkedIn: https://www.linkedin.com/in/chris-dorward/\\n\\n=== INSTRUCTIONS ===\\n\\nInstructions:\\n1. Research the LinkedIn profile and provided details. Focus on their current and past experience, role, department, and any e-commerce, SaaS, or software development-related activities.\\n\\n- Infer responsibilities based on title and seniority\\n- Estimate decision-making power (low / medium / high)\\n- Identify likely business priorities\\n- Identify pain points related to e-commerce, SaaS, or multi-tenant platforms\\n- Assess how relevant they are as a prospect for NX°\\n- Be pragmatic and commercially focused\\n\\n- If data is missing, make reasonable assumptions\\n- Do NOT mention missing data\\n- Do NOT be vague\\n\\n=== SCORING ===\\nAssign a percentage score (0-100) indicating the likelihood that this person or their company would be interested in NX°. Base this on their role, company type, experience with e-commerce, SaaS, or multi-tenant apps, and any signals of technical or business alignment with Next.js or similar platforms.\\n\\nBriefly justify the score in the recommendation.\\n\\n=== OUTPUT ===\\nReturn ONLY valid JSON in this format:\\n\\n{\\n    \\\"name\\\": string,\\n    \\\"summary\\\": string,\\n    \\\"jobTitle\\\": string,\\n    \\\"company\\\": string,\\n    \\\"companyWebsite\\\": string,\\n    \\\"avatarUrl\\\"?: string,\\n    \\\"email\\\"?: string,\\n    \\\"hasJavaScript\\\": boolean,\\n    \\\"category\\\": \\\"Developer\\\" | \\\"Recruiter\\\" | \\\"Business\\\" | \\\"Other\\\",\\n    \\\"tags\\\": array,\\n    \\\"score\\\": number,\\n    \\\"recommendation\\\": string\\n}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8000/prompt/linkedin",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "prompt",
+                    "linkedin"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "8K/prompt",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8000/prompt",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "prompt"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "8K/prompt/dump",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8000/prompt/dump",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "prompt",
+                    "dump"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "prospects",
+          "item": [
+            {
+              "name": "prospects",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8000/prospects",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "prospects"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "prospects/read",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8000/prospects",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "prospects"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "prospects/530",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8000/prospects/530",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "prospects",
+                    "530"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "?search=chris",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8000/prospects?search=chris",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "prospects"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "chris"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "prospects/factoryreset",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8000/prospects/factoryreset",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "prospects",
+                    "factoryreset"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "prospects/50",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"flag\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8000/prospects/50",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "prospects",
+                    "50"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "prospects/empty",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8000/prospects/empty",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "prospects",
+                    "empty"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "prospects/seed",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8000/prospects/empty",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "prospects",
+                    "empty"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "resend",
+          "item": [
+            {
+              "name": "resend",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": \"listingslab@gmail.com\",\n  \"subject\": \"Your Subject Here\",\n  \"html\": \"<p>Your HTML content here</p>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8000/resend",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "resend"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "queue",
+          "item": [
+            {
+              "name": "alter_table",
+              "item": [
+                {
+                  "name": "/queue/alter/add-column",
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"column_name\": \"group\", \"column_type\": \"TEXT\"}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:8000/queue/empty",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8000",
+                      "path": [
+                        "queue",
+                        "empty"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "/queue/alter/rename_column",
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"old_name\": \"url\",\n  \"new_name\": \"linkedin\",\n  \"column_type\": \"TEXT\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:8000/queue/alter/rename_column",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8000",
+                      "path": [
+                        "queue",
+                        "alter",
+                        "rename_column"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "data",
+              "item": [
+                {
+                  "name": "queue/delete?id=YOUR_ID",
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "http://localhost:8000/queue/delete?id=YOUR_ID",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8000",
+                      "path": [
+                        "queue",
+                        "delete"
+                      ],
+                      "query": [
+                        {
+                          "key": "id",
+                          "value": "YOUR_ID"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "/queue/empty",
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:8000/queue/empty",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8000",
+                      "path": [
+                        "queue",
+                        "empty"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "import",
+              "item": [
+                {
+                  "name": "/queue/csv/linkedin",
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:8000/queue/import/linkedin",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8000",
+                      "path": [
+                        "queue",
+                        "import",
+                        "linkedin"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "/queue",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8000/queue",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "queue"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "base_url",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8000/health",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/health",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "This folder contains requests targeting a local API running on **port 8000**. It covers the following areas:\n\n**Base & Health**\n\n- `GET /` — Verifies the base URL is reachable and the server is responding.\n    \n- `GET /health` — Health check endpoint to confirm the API is running and operational.\n    \n\n**Prospect Management**\n\n- `GET /prospects` — Retrieves the current list of prospects.\n    \n- `GET /prospects/alter` — Fetches or triggers an alteration on prospect data.\n    \n- `DELETE /prospects/empty` — Removes all prospects, emptying the prospects store.\n    \n- `DELETE /prospects/empty` _(seed)_ — Used to reset and seed the prospects data, preparing the store with initial data for testing."
+    }
+  ]
+}

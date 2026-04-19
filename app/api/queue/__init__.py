@@ -4,7 +4,9 @@
 from fastapi import APIRouter
 from .routes.drop import router as drop_router
 from .routes.empty import router as empty_router
+
 from .routes.get import router as get_router
+from .routes.next import router as next_router
 
 from .routes.create import router as create_router
 from .routes.delete import router as delete_router
@@ -17,6 +19,7 @@ router = APIRouter()
 router.include_router(drop_router)
 router.include_router(empty_router)
 router.include_router(get_router)
+router.include_router(next_router)
 router.include_router(create_router)
 router.include_router(delete_router)
 router.include_router(linkedin_import_router.router)

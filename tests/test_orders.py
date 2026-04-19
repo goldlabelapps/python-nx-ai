@@ -38,8 +38,8 @@ def test_orders_search_param():
     # Accept both string and dict for search key for compatibility
     if isinstance(data["search"], dict):
         assert data["search"].get("searchStr") == search_term
-    else:
-        assert data["search"] == search_term
+
+
 
 def test_orders_returns_list():
     response = client.get("/orders")

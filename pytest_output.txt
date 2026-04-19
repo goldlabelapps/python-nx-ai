@@ -1,0 +1,23 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-9.0.2, pluggy-1.6.0 -- /opt/homebrew/opt/python@3.11/bin/python3.11
+cachedir: .pytest_cache
+rootdir: /Users/milky/My Drive/GitHub/python
+plugins: anyio-4.12.1, Faker-40.12.0
+collecting ... collected 14 items
+
+tests/test_health.py::test_health_endpoint PASSED                        [  7%]
+tests/test_health.py::test_health_meta_keys PASSED                       [ 14%]
+tests/test_make_meta.py::test_make_meta_basic PASSED                     [ 21%]
+tests/test_make_meta.py::test_make_meta_default_base_url PASSED          [ 28%]
+tests/test_make_meta.py::test_make_meta_time_is_int PASSED               [ 35%]
+tests/test_orders.py::test_get_orders_root PASSED                        [ 42%]
+tests/test_orders.py::test_orders_search_param PASSED                    [ 50%]
+tests/test_orders.py::test_get_queue PASSED                              [ 57%]
+tests/test_orders.py::test_orders_returns_list PASSED                    [ 64%]
+tests/test_prospects.py::test_get_prospects_root PASSED                  [ 71%]
+tests/test_prospects.py::test_prospects_returns_list PASSED              [ 78%]
+tests/test_resend.py::test_resend_post_email PASSED                      [ 85%]
+tests/test_routes.py::test_root_returns_welcome_message PASSED           [ 92%]
+tests/test_routes.py::test_health_returns_ok PASSED                      [100%]
+
+============================= 14 passed in 10.17s ==============================
