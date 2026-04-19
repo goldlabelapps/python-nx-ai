@@ -10,7 +10,7 @@ import os
 from app.api.routes import router
 
 app = FastAPI(
-    title="Python",
+    title="Python°",
     description="FastAPI, Postgres, tsvector",
     version=__version__,
 )
@@ -21,7 +21,10 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:1999", 
         "http://localhost:2027",
+        "http://localhost:2020",
+        "http://localhost:2000",
         "https://goldlabel.pro",
+        "https://nx-admin.goldlabel.pro",
         "https://free.goldlabel.pro",
     ],
     allow_credentials=True,
