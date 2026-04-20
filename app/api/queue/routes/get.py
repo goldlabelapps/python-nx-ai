@@ -1,55 +1,69 @@
 import os
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from app.utils.make_meta import make_meta
 from app.utils.db import get_db_connection_direct
 
 router = APIRouter()
 
 @router.get("/queue")
-def read_queue() -> dict:
+def read_queue(
+    collection: str = Query(None, description="Filter by collection name"),
+    group: str = Query(None, description="Filter by group name")
+) -> dict:
     """GET /queue: Return queue table info, schema, and most recent record."""
     try:
         conn = get_db_connection_direct()
         cursor = conn.cursor()
 
-        # 1. Count records
+        # 1. Total record count (unfiltered)
         cursor.execute("SELECT COUNT(*) FROM queue;")
         count_row = cursor.fetchone()
-        record_count = count_row[0] if count_row else 0
+        total_count = count_row[0] if count_row else 0
 
-        # 2. Get table schema
-        cursor.execute("SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'queue';")
-        schema = [
-            {
-                "name": row[0],
-                "type": row[1]
-            }
-            for row in cursor.fetchall()
-        ]
-
-        # 3. Get a random record
-        cursor.execute("SELECT * FROM queue ORDER BY RANDOM() LIMIT 1;")
-        columns = [desc[0] for desc in cursor.description] if cursor.description else []
-        rows = cursor.fetchall()
-        random_record = [dict(zip(columns, row)) for row in rows] if rows and columns else []
-
-        # 4. Get unique values from collection and group columns
+        # 2. Get unique values from collection and group columns
         cursor.execute("SELECT DISTINCT collection FROM queue WHERE collection IS NOT NULL;")
         collections = [row[0] for row in cursor.fetchall()]
         cursor.execute('SELECT DISTINCT "group" FROM queue WHERE "group" IS NOT NULL;')
         groups = [row[0] for row in cursor.fetchall()]
+
+        # 3. Build filter conditions
+        filters = []
+        params = []
+        if collection:
+            filters.append("collection = %s")
+            params.append(collection)
+        if group:
+            filters.append('"group" = %s')
+            params.append(group)
+        where_clause = f"WHERE {' AND '.join(filters)}" if filters else ""
+
+        # 4. Filtered count
+        count_query = f"SELECT COUNT(*) FROM queue {where_clause};"
+        cursor.execute(count_query, params)
+        filtered_count_row = cursor.fetchone()
+        filtered_count = filtered_count_row[0] if filtered_count_row else 0
+
+        # 5. Get the next in queue (most recently updated in filtered list)
+        next_query = f"SELECT * FROM queue {where_clause} ORDER BY updated DESC LIMIT 1;"
+        cursor.execute(next_query, params)
+        columns = [desc[0] for desc in cursor.description] if cursor.description else []
+        row = cursor.fetchone()
+        next_record = dict(zip(columns, row)) if row and columns else None
 
         conn.close()
 
         return {
             "meta": make_meta("success", "Queue table info"),
             "data": {
-                "in_queue": record_count,
+                "total": total_count,
+                "filtered": filtered_count,
                 "collections": collections,
                 "groups": groups,
-                "example": random_record,
-                # "queue_schema": schema
+                "next": next_record
             }
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return {
+            "meta": make_meta("error", str(e)),
+            "data": None
+        }
