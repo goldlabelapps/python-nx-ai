@@ -53,7 +53,7 @@ def read_queue(
         conn.close()
 
         return {
-            "meta": make_meta("success", "Queue table info"),
+            "meta": make_meta("success", "Next in queue"),
             "data": {
                 "total": total_count,
                 "filtered": filtered_count,
