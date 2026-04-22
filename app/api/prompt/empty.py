@@ -1,6 +1,4 @@
-import os
-
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
 from app.utils.api_key_auth import get_api_key
 from app.utils.db import get_db_connection_direct
@@ -8,10 +6,10 @@ from app.utils.make_meta import make_meta
 
 router = APIRouter()
 
-# PATCH /prompt/drop: empties the prompt table
-@router.patch("/prompt/drop")
-def drop_prompt_table(api_key: str = Depends(get_api_key)) -> dict:
-    """PATCH /prompt/drop: empties the prompt table."""
+# PATCH /prompt/empty: empties the prompt table
+@router.patch("/prompt/empty")
+def empty_prompt_table(api_key: str = Depends(get_api_key)) -> dict:
+    """PATCH /prompt/empty: empties the prompt table."""
     try:
         conn = get_db_connection_direct()
         cur = conn.cursor()

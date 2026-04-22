@@ -15,7 +15,9 @@ def test_get_queue():
     assert "in_queue" in queue_data
     assert "collections" in queue_data
     assert "groups" in queue_data
-    assert "example" in queue_data
+    assert "filtered" in queue_data
+    assert "total" in queue_data
+    assert "next" in queue_data
     meta = data["meta"]
     assert meta["severity"] == "success"
     assert meta["title"] == "Queue table info"

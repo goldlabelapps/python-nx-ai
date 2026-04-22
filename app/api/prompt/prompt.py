@@ -1,5 +1,5 @@
 import os
-from fastapi import APIRouter, HTTPException, Query, Request, Depends
+from fastapi import APIRouter, HTTPException, Depends
 from app.utils.make_meta import make_meta
 from app.utils.db import get_db_connection_direct
 from app.utils.api_key_auth import get_api_key
@@ -7,49 +7,32 @@ from app.utils.api_key_auth import get_api_key
 router = APIRouter()
 
 @router.get("/prompt")
-def get_prompt_records(
-    request: Request,
-    page: int = Query(1, ge=1, description="Page number (1-based)"),
-    page_size: int = Query(10, ge=1, le=100, description="Records per page"),
-    api_key: str = Depends(get_api_key)
-) -> dict:
-    """GET /prompt: Paginated list of prompt completions."""
+@router.get("/prompts")
+def get_prompt_table_metadata(api_key: str = Depends(get_api_key)) -> dict:
+    """GET /prompt: Return prompt table metadata."""
     try:
         conn = get_db_connection_direct()
         cur = conn.cursor()
-        offset = (page - 1) * page_size
         cur.execute("SELECT COUNT(*) FROM prompt;")
         count_row = cur.fetchone()
-        total = count_row[0] if count_row and count_row[0] is not None else 0
-        cur.execute("""
-            SELECT id, prompt, completion, duration, time, data, model
-            FROM prompt
-            ORDER BY id DESC
-            LIMIT %s OFFSET %s;
-        """, (page_size, offset))
-        records = [
-            {
-                "id": row[0],
-                "prompt": row[1],
-                "completion": row[2],
-                "duration": row[3],
-                "time": row[4].isoformat() if row[4] else None,
-                "data": row[5],
-                "model": row[6],
-            }
-            for row in cur.fetchall()
-        ]
+        record_count = count_row[0] if count_row and count_row[0] is not None else 0
+        cur.execute(
+            """
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_schema = 'public' AND table_name = 'prompt'
+            ORDER BY ordinal_position;
+            """
+        )
+        columns = [row[0] for row in cur.fetchall()]
         cur.close()
         conn.close()
-        meta = make_meta("success", f"Prompt {len(records)} records (page {page})")
+        meta = make_meta("success", "Prompt table metadata")
         return {
             "meta": meta,
             "data": {
-                "page": page,
-                "page_size": page_size,
-                "total": total,
-                "pages": (total + page_size - 1) // page_size,
-                "data": records,
+                "record_count": record_count,
+                "columns": columns,
             },
         }
     except Exception as e:
