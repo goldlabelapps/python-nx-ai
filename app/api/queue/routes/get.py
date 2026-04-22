@@ -57,8 +57,12 @@ def read_queue(
             "data": {
                 "total": total_count,
                 "filtered": filtered_count,
-                "collections": collections,
-                "groups": groups,
+                "filters": {
+                    "collectionFilter": collection,
+                    "groupFilter": group,
+                    "collections": collections,
+                    "groups": groups,
+                },
                 "next": next_record,
             }
         }

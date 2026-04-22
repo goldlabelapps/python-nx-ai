@@ -53,7 +53,8 @@ FastAPI auto-generates interactive docs:
 #### Notable Endpoints
 
 - `GET /health` — Health check
-- `GET/POST /prompt` — LLM prompt completion (formerly `/llm`)
+- `GET /prompt` or `GET /prompts` — Prompt table metadata (`record_count`, `columns`)
+- `POST /prompt` — LLM prompt completion (formerly `/llm`)
 - `GET/POST /resend` — Send email via Resend API (see implementation in `app/utils/notify/resend.py`)
 - `GET /prospects` — Paginated prospects
 - `POST /prospects/process` — Bulk CSV ingestion
