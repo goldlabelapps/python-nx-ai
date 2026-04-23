@@ -4,7 +4,7 @@
 
 > Production-ready, open-source FastAPI application with PostgreSQL and blazing-fast full-text search.
 
-#### Project Overview
+#### Overview
 
 This project provides a scalable API backend using FastAPI and PostgreSQL, featuring:
 
@@ -12,7 +12,7 @@ This project provides a scalable API backend using FastAPI and PostgreSQL, featu
 - Endpoints for health checks, product management, prompt handling (via `/prompt`), resend email, and prospect management
 - Efficient ingestion and processing of large CSV files
 
-#### 🚀 Features
+#### Features
 
 - **Python 3.11+**
 - **FastAPI** — Modern, high-performance REST API
@@ -42,7 +42,6 @@ uvicorn app.main:app --reload
 
 Visit [localhost:8000](http://localhost:8000) or [onrender](https://nx-ai.onrender.com)
 
-
 #### API Documentation
 
 FastAPI auto-generates interactive docs:
@@ -70,7 +69,6 @@ SELECT * FROM prospects WHERE search_vector @@ plainto_tsquery('english', 'searc
 **How it works:**
 - On every insert/update, `search_vector` is computed using PostgreSQL's `to_tsvector('english', ...)`.
 - The GIN index (`idx_prospects_search_vector`) enables efficient search across large datasets.
-
 
 #### Processing Large CSV Files
 
