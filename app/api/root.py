@@ -8,44 +8,15 @@ router = APIRouter()
 
 @router.get("/")
 def root() -> dict:
-    """NX-AI."""
+    """"Python°"""
     load_dotenv()
     base_url = os.getenv("BASE_URL", "http://localhost:8000")
     epoch = int(time.time() * 1000)
     meta = {
-        "title": "Python",
-        "severity": "success",
+        "title": "Python°",
         "version": __version__,
         "base_url": base_url,
         "time": epoch,
     }
-    endpoints = [
-        {"name": "health", "url": f"{base_url}/health"},
-        {
-            "name": "Queue", 
-            "endpoints": [
-                {"name": "list", "url": f"{base_url}/queue"},
-            ]
-        },
-        {
-            "name": "Prompt°", 
-            "endpoints": [
-                {"name": "list", "url": f"{base_url}/prompt"},
-            ]
-        },
-        {
-            "name": "Orders°", 
-            "endpoints": [
-                {"name": "list", "url": f"{base_url}/orders"},
-            ]
-        },
-        {
-            "name": "Prospects°", 
-            "endpoints": [
-                {"name": "list", "url": f"{base_url}/prospects"},
-            ]
-        },
-        
-        {"name": "Docs", "url": f"{base_url}/docs"},
-    ]
-    return {"meta": meta, "data": endpoints}
+    
+    return {"meta": meta}

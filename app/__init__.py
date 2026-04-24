@@ -1,4 +1,4 @@
-"""Python - FastAPI, Postgres, tsvector"""
+"""Python° - FastAPI, Postgres, tsvector"""
 
 # Current Version
-__version__ = "3.0.0"
+__version__ = "3.0.1"
