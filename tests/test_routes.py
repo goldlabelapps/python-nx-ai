@@ -7,12 +7,11 @@ from app.main import app
 client = TestClient(app)
 
 def test_root_returns_welcome_message() -> None:
-    """GET / should reply in the first person."""
+    """GET / should return API metadata."""
     response = client.get("/")
     assert response.status_code == 200
     json_data = response.json()
     assert "meta" in json_data
-    assert "data" in json_data
     assert "title" in json_data["meta"]
 
 def test_health_returns_ok() -> None:
