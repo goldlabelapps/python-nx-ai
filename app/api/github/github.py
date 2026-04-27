@@ -1,40 +1,48 @@
-import os
-import hashlib
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, Depends
 from app.utils.make_meta import make_meta
 from app.utils.db import get_db_connection_direct
 from app.utils.api_key_auth import get_api_key
 
 router = APIRouter()
 
+_TABLES = [
+    "github_accounts",
+    "github_repos",
+    "github_gists",
+    "github_projects",
+    "github_resources",
+]
+
+
+def _fetch_table(cur, table: str) -> dict:
+    cur.execute(f"SELECT COUNT(*) FROM {table};")
+    row = cur.fetchone()
+    count = row[0] if row and row[0] is not None else 0
+    cur.execute(f"SELECT * FROM {table} ORDER BY id DESC LIMIT 100;")
+    if cur.description:
+        columns = [desc[0] for desc in cur.description]
+        rows = [dict(zip(columns, r)) for r in cur.fetchall()]
+    else:
+        rows = []
+    return {"count": count, "rows": rows}
+
+
 @router.get("/github")
 def get_github(api_key: str = Depends(get_api_key)) -> dict:
-    """GET /github: Return GitHub data."""
+    """GET /github: Return counts and records from all GitHub tables."""
+    conn = None
+    cur = None
     try:
         conn = get_db_connection_direct()
         cur = conn.cursor()
-        cur.execute("SELECT COUNT(*) FROM github;")
-        count_row = cur.fetchone()
-        record_count = count_row[0] if count_row and count_row[0] is not None else 0
-        cur.execute(
-            """
-            SELECT column_name
-            FROM information_schema.columns
-            WHERE table_schema = 'public' AND table_name = 'github'
-            ORDER BY ordinal_position;
-            """
-        )
-        columns = [row[0] for row in cur.fetchall()]
-        cur.close()
-        conn.close()
-        meta = make_meta("success", "GitHub table metadata")
-        return {
-            "meta": meta,
-            "data": {
-                "record_count": record_count,
-                "columns": columns,
-            },
-        }
+        data = {table: _fetch_table(cur, table) for table in _TABLES}
+        return {"meta": make_meta("success", "GitHub data"), "data": data}
     except Exception as e:
-        meta = make_meta("error", f"DB error: {str(e)}")
-        return {"meta": meta, "data": {}}
+        return {"meta": make_meta("error", f"DB error: {str(e)}"), "data": {}}
+    finally:
+        if cur is not None:
+            cur.close()
+        if conn is not None:
+            conn.close()
+
+
