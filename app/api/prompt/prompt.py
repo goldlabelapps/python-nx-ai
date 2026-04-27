@@ -26,6 +26,15 @@ def get_prompt_table_metadata(api_key: str = Depends(get_api_key)) -> dict:
             """
         )
         columns = [row[0] for row in cur.fetchall()]
+        cur.execute(
+            """
+            SELECT id, prompt, completion, time, model
+            FROM prompt
+            ORDER BY id DESC
+            LIMIT 1;
+            """
+        )
+        top_row = cur.fetchone()
         cur.close()
         conn.close()
         meta = make_meta("success", "Prompt table metadata")
@@ -34,6 +43,13 @@ def get_prompt_table_metadata(api_key: str = Depends(get_api_key)) -> dict:
             "data": {
                 "record_count": record_count,
                 "columns": columns,
+                "top_record": {
+                    "id": top_row[0],
+                    "prompt": top_row[1],
+                    "completion": top_row[2],
+                    "time": top_row[3].isoformat() if top_row and top_row[3] else None,
+                    "model": top_row[4],
+                } if top_row else None,
             },
         }
     except Exception as e:
