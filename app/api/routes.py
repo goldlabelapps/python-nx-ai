@@ -13,6 +13,7 @@ from app.api.prompt.empty import router as prompts_empty_router
 from app.api.prospects.prospects import router as prospects_router
 from app.api.orders.orders import router as orders_router
 from app.api.queue import router as queue_router
+from app.api.github import github_router
 
 router.include_router(root_router)
 router.include_router(resend_router)
@@ -22,3 +23,4 @@ router.include_router(prompts_empty_router)
 router.include_router(prospects_router)
 router.include_router(orders_router)
 router.include_router(queue_router)
+router.include_router(github_router)
