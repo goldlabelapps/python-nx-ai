@@ -13,8 +13,11 @@ def test_resend_post_email(monkeypatch):
 
     payload = {
         "to": 'listingslab@gmail.com',
-        "subject": "pytest",
-        "html": "Python tests have run"
+        "subject": "Python°",
+        "html": "pytest run successfully",
+        "cta_label": "NX° Admin",
+        "cta_url": "https://nx-admin.goldlabel.pro",
+        
     }
     response = client.post("/resend", json=payload)
     assert response.status_code == 202

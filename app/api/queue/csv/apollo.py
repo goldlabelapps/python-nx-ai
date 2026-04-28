@@ -10,9 +10,9 @@ router = APIRouter()
 @router.post("/queue/csv/apollo")
 def import_apollo_csv() -> dict:
     """POST /queue/csv/apollo: Import data from apollo.csv into the queue table (template)."""
-    csv_path = os.path.join(os.path.dirname(__file__), "../csv/apollo/sample.csv")
+    csv_path = os.path.join(os.path.dirname(__file__), "../csv/apollo/apollo-3.csv")
     if not os.path.exists(csv_path):
-        raise HTTPException(status_code=404, detail="sample.csv not found")
+        raise HTTPException(status_code=404, detail="csv not found")
     try:
         conn = get_db_connection_direct()
         cursor = conn.cursor()

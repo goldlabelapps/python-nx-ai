@@ -59,7 +59,7 @@ def goldlabel_email(
       .email-header-inner {{ background-color: {_DARK_BG} !important; }}
       .email-footer       {{ background-color: {_DARK_BG} !important; color: {_DARK_TEXT} !important; }}
       .email-subject      {{ color: {_DARK_PRIMARY} !important; }}
-      .email-cta          {{ background-color: {_DARK_PRIMARY} !important; color: {_DARK_BG} !important; }}
+      .email-cta          {{ background-color: {_DARK_PRIMARY} !important; color: {_LIGHT_PRIMARY} !important; }}
       a                   {{ color: {_DARK_PRIMARY} !important; }}
     }}
   </style>
@@ -119,7 +119,7 @@ def goldlabel_email(
               <a class="email-cta"
                  href="{cta_url}"
                  style="display:block; width:100%; box-sizing:border-box;
-                        background-color:{_LIGHT_PRIMARY}; color:#ffffff;
+                        background-color:{_DARK_PRIMARY}; color:{_LIGHT_PRIMARY};
                         font-size:16px; font-weight:700; text-align:center;
                         text-decoration:none; border-radius:6px;
                         padding:14px 20px;">
