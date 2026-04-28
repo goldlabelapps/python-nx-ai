@@ -39,6 +39,16 @@ def root() -> dict:
                     "type": "string",
                     "required": True,
                     "description": "HTML content of the email."
+                },
+                "cta_label": {
+                    "type": "string",
+                    "required": False,
+                    "description": "Optional CTA button label. Defaults to 'Call To Action'."
+                },
+                "cta_url": {
+                    "type": "string",
+                    "required": False,
+                    "description": "Optional CTA URL. Defaults to the website base URL."
                 }
             }
         }
@@ -53,6 +63,8 @@ class EmailRequest(BaseModel):
     to: EmailStr
     subject: str
     html: str
+    cta_label: str | None = None
+    cta_url: str | None = None
 
 @router.post("/resend", status_code=status.HTTP_202_ACCEPTED)
 def send_email(request: EmailRequest):
@@ -63,7 +75,12 @@ def send_email(request: EmailRequest):
     result = send_email_resend(
         to=request.to,
         subject=request.subject,
-        html=goldlabel_email(request.subject, request.html),
+        html=goldlabel_email(
+            request.subject,
+            request.html,
+            cta_label=request.cta_label or "Call To Action",
+            cta_url=request.cta_url or "https://goldlabel.pro",
+        ),
     )
     if "error" in result:
         meta = make_meta("error", result["error"])
