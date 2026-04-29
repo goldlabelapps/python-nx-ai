@@ -41,15 +41,15 @@ def get_prompt_table_metadata(api_key: str = Depends(get_api_key)) -> dict:
         return {
             "meta": meta,
             "data": {
-                "record_count": record_count,
-                "columns": columns,
-                "top_record": {
+                "first_record": {
                     "id": top_row[0],
-                    "prompt": top_row[1],
-                    "completion": top_row[2],
+                    # "prompt": top_row[1],
+                    # "completion": top_row[2],
                     "time": top_row[3].isoformat() if top_row and top_row[3] else None,
                     "model": top_row[4],
                 } if top_row else None,
+                "record_count": record_count,
+                "columns": columns,
             },
         }
     except Exception as e:
