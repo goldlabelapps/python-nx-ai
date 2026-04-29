@@ -27,7 +27,7 @@ def sync_flickr(api_key: str = Depends(get_api_key)) -> dict:
         "user_id": flickr_user,
         "format": "json",
         "nojsoncallback": 1,
-        "per_page": 10
+        "per_page": 100
     }
     try:
         resp = requests.get(url, params=params)
