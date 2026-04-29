@@ -14,7 +14,9 @@ from app.api.prompt.delete_id import router as prompt_delete_id_router
 from app.api.prospects.prospects import router as prospects_router
 from app.api.orders.orders import router as orders_router
 from app.api.queue import router as queue_router
+
 from app.api.github import github_router
+from app.api.flickr import flickr_router
 
 router.include_router(root_router)
 router.include_router(resend_router)
@@ -26,3 +28,4 @@ router.include_router(prospects_router)
 router.include_router(orders_router)
 router.include_router(queue_router)
 router.include_router(github_router)
+router.include_router(flickr_router)
